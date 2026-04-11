@@ -1,0 +1,11 @@
+@host = http://localhost:5293
+@sessionId =
+@token =
+
+POST {{host}}/sessions/abandon
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "sessionId": "{{sessionId}}"
+}

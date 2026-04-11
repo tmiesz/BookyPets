@@ -1,0 +1,13 @@
+@host = http://localhost:5293
+@sessionId = 1550B197-38EB-4F08-96BB-BEED661E89AA
+@pagesRead = 10
+@token =
+
+POST {{host}}/sessions/complete
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "sessionId": "{{sessionId}}",
+    "pagesRead": {{pagesRead}}
+}

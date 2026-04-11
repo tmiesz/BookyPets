@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BookyPets.Api/BookyPets.Api.csproj" />
+    <Project Path="src/BookyPets.Application/BookyPets.Application.csproj" />
+    <Project Path="src/BookyPets.Contracts/BookyPets.Contracts.csproj" />
+    <Project Path="src/BookyPets.Domain/BookyPets.Domain.csproj" />
+    <Project Path="src/BookyPets.Infrastructure/BookyPets.Infrastructure.csproj" />
+    <Project Path="src/BookyPets.Shared/BookyPets.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BookyPets.Application.Tests/BookyPets.Application.Tests.csproj" />
+    <Project Path="tests/BookyPets.Domain.Tests/BookyPets.Domain.Tests.csproj" />
+    <Project Path="tests/Common.Tests/Common.Tests.csproj" />
+    <Project Path="tests/BookyPets.Api.Tests/BookyPets.Api.Tests.csproj" />
+  </Folder>
+</Solution>

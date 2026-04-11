@@ -1,0 +1,6 @@
+@host = http://localhost:5293
+@readerId =
+@token =
+
+GET {{host}}/readers/{{readerId}}
+Authorization: Bearer {{token}}

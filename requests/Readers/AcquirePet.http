@@ -1,0 +1,7 @@
+@host = http://localhost:5293
+@readerId = 481A7615-8F98-49AC-9B82-E8EBEB209B09
+@petId = B5ED214B-B84E-4710-BFA2-24128CCC2C31
+@token =
+
+POST {{host}}/readers/{{readerId}}/pets/{{petId}}
+Authorization: Bearer {{token}}

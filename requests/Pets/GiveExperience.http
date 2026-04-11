@@ -1,0 +1,7 @@
+@host = http://localhost:5293
+@petId = 920c75af-e97c-431c-815f-2472a11ee9d5
+@experience = 350
+@token =
+
+POST {{host}}/pets/{{petId}}/experience/{{experience}}
+Authorization: Bearer {{token}}

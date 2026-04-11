@@ -1,0 +1,7 @@
+@host = http://localhost:5293
+@readerId = 481A7615-8F98-49AC-9B82-E8EBEB209B09
+@bookId = 5D511A69-E11E-4191-9042-4F6F5200C164
+@token =
+
+POST {{host}}/readers/{{readerId}}/books/{{bookId}}
+Authorization: Bearer {{token}}

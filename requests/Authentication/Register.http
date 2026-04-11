@@ -1,0 +1,11 @@
+@host=http://localhost:5293
+
+POST {{host}}/authentication/register
+Content-Type: application/json
+
+{
+    "FirstName" : "Admin",
+    "LastName" : "Admin",
+    "Email" : "admin2@bookypets.com",
+    "Password" : "Admin123!@#A"
+}

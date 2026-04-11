@@ -1,0 +1,13 @@
+@host = http://localhost:5293
+@token =
+
+POST {{host}}/books
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Meditations",
+    "author": "Marcus Aurelius",
+    "pageCount": 304,
+    "genre": "Philosophy"
+}

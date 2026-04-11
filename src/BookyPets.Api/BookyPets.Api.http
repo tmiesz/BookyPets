@@ -1,0 +1,6 @@
+@BookyPets.Api_HostAddress = http://localhost:5293
+
+GET {{BookyPets.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

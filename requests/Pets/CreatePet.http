@@ -1,0 +1,11 @@
+@host = http://localhost:5293
+@token =
+
+POST {{host}}/pets
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Fluffy Johnson",
+    "favouriteGenre": "Fantasy"
+}

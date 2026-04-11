@@ -1,0 +1,11 @@
+@host = http://localhost:5293
+@progressId = b7403c42-5b93-47c1-991e-b633c1703845
+@token =
+
+POST {{host}}/sessions/start
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "progressId": "{{progressId}}"
+}
