@@ -16,6 +16,13 @@
         packages = with pkgs; [
           dotnet-sdk_10
         ];
+
+        shellHook = ''
+          export JwtSettings__Secret="random-string-at-least-32-characters-long"
+          export JwtSettings__Issuer="BookyPets"
+          export JwtSettings__Audience="BookyPets"
+          export JwtSettings__TokenExpirationInMinutes="60"
+        '';
       };
     };
 }
