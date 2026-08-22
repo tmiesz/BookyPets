@@ -52,7 +52,7 @@ public class ReadersController(IMediator _mediator) : ApiController
         var acquirePetResult = await _mediator.SendAsync(command);
 
         return acquirePetResult.Match(
-            _ => NoContent(),
+            NoContent,
             Problem);
     }
 

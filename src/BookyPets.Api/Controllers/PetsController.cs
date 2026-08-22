@@ -60,7 +60,7 @@ public class PetsController(IMediator _mediator) : ApiController
         var giveExperienceResult = await _mediator.SendAsync(command);
 
         return giveExperienceResult.Match(
-            _ => NoContent(),
+            NoContent,
             Problem);
     }
 }
