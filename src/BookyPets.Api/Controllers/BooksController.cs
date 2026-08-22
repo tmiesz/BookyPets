@@ -21,7 +21,7 @@ public class BooksController(IMediator _mediator) : ApiController
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "Invalid genre type");
         }
 
-        var command = new CreateBookCommand(request.Title, request.Author, genre!, request.PageCount);
+        var command = new CreateBookCommand(request.Title, request.Author, genre, request.PageCount);
 
         var createBookResult = await _mediator.SendAsync(command);
 
