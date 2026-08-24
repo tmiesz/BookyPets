@@ -35,7 +35,7 @@ public class ReadersController(IMediator _mediator) : ApiController
             return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "Invalid account type");
         }
 
-        var command = new ChangeAccountTypeCommand(readerId, domainAccountType!);
+        var command = new ChangeAccountTypeCommand(readerId, domainAccountType);
 
         var changeAccountTypeResult = await _mediator.SendAsync(command);
 
@@ -44,7 +44,7 @@ public class ReadersController(IMediator _mediator) : ApiController
             Problem);
     }
 
-    [HttpPost("{readerId:guid}/pets/{petId:guid}")]
+    [HttpPost("pets/{petId:guid}/acquire")]
     public async Task<IActionResult> AcquirePet(Guid petId)
     {
         var command = new AcquirePetCommand(petId);
@@ -56,7 +56,7 @@ public class ReadersController(IMediator _mediator) : ApiController
             Problem);
     }
 
-    [HttpPost("{readerId:guid}/books/{bookId:guid}")]
+    [HttpPost("/books/{bookId:guid}/acquire")]
     public async Task<IActionResult> AcquireBook(Guid bookId)
     {
         var command = new AcquireBookCommand(bookId);
