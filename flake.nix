@@ -15,6 +15,7 @@
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
           dotnet-sdk_10
+          nodejs_22
         ];
 
         shellHook = ''
