@@ -1,5 +1,5 @@
 import BookCard from "../components/BookCard"
-import { useState, SubmitEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +28,7 @@ function Home() {
         }
     ];
 
-    const handleSearch = (e : SubmitEvent<HTMLFormElement>) => {
+    const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         alert(searchQuery);
         setSearchQuery("");

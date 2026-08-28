@@ -1,9 +1,9 @@
 import './App.css'
-import Home from '../pages/Home'
-import Books from '../pages/Books'
-import Pets from '../pages/Pets'
+import Home from './pages/Home'
+import Books from './pages/Books'
+import Pets from './pages/Pets'
 import { Routes, Route } from "react-router-dom"
-import NavBar from "../components/NavBar"
+import NavBar from "./components/NavBar"
 
 function App() {
     return (
