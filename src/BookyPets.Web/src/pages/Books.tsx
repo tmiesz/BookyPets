@@ -1,5 +1,6 @@
 import BookCard from "../components/BookCard"
 import { useState, type SubmitEvent } from "react";
+import "../css/Books.css"
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -35,7 +36,7 @@ function Home() {
     };
 
     return (
-        <div className="home">
+        <div className="books">
             <form onSubmit={handleSearch} className="search-form">
                 <input
                     type="text"
@@ -43,7 +44,7 @@ function Home() {
                     className="search-input"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)} />
-                <button type="submit" className="search-btn">Search</button>
+                <button type="submit" className="search-button">Search</button>
             </form>
 
             <div className="books-grid">

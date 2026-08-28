@@ -1,5 +1,5 @@
 import type { Book } from "../types/Book";
-
+import "../css/BookCard.css"
 interface BookCardProps {
     book: Book
 }
@@ -13,8 +13,8 @@ function BookCard({ book }: BookCardProps) {
     return <div className="book-card">
         <div className="book-image">
             <div className="book-overlay">
-                <button className="acquire-btn" onClick={onAcquireClick}>
-                    O
+                <button className="acquire-button" onClick={onAcquireClick}>
+                    +
                 </button>
             </div>
         </div>
