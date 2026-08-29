@@ -1,33 +1,30 @@
 import BookCard from "../components/BookCard"
-import { useState, type SubmitEvent } from "react";
+import { useState, useEffect, type SubmitEvent } from "react";
+import { getBooks } from "../services/api";
 import "../css/Books.css"
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("");
+    const [books, setBooks] = useState([])
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-    const books = [
-        {
-            id: "1",
-            title: "book 1",
-            author: "author 1",
-            genre: "Fantasy",
-            pagecount: 100
-        },
-        {
-            id: "2",
-            title: "book 2",
-            author: "author 2",
-            genre: "Sci-Fi",
-            pagecount: 200
-        },
-        {
-            id: "3",
-            title: "book 3",
-            author: "author 3",
-            genre: "Horror",
-            pagecount: 300
+    useEffect(() => {
+        const loadBooks = async () => {
+            try {
+                const books = await getBooks()
+                setBooks(books)
+            } catch (err) {
+                console.log(err)
+                setError("Failed to load books...")
+            }
+            finally {
+                setLoading(false)
+            }
         }
-    ];
+
+        loadBooks()
+    }, [])
 
     const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -47,11 +44,15 @@ function Home() {
                 <button type="submit" className="search-button">Search</button>
             </form>
 
-            <div className="books-grid">
-                {books.map((book) => (
-                    <BookCard book={book} key={book.id} />
-                ))}
-            </div>
+            {error && <div className="error-message">{error}</div>}
+
+            {loading ? <div className="loading">Loading...</div> :
+                <div className="books-grid">
+                    {books.map((book) => (
+                        <BookCard book={book} key={book.id} />
+                    ))}
+                </div>
+            }
         </div>
     );
 }
