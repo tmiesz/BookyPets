@@ -6,4 +6,5 @@ public interface IBooksRepository
 {
     Task AddBookAsync(Book book);
     Task<Book?> GetBookAsync(Guid bookId);
+    Task<IReadOnlyList<Book>> GetBooksAsync();
 }

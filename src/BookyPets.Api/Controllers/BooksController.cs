@@ -43,4 +43,22 @@ public class BooksController(IMediator _mediator) : ApiController
             Problem
         );
     }
+
+    [HttpGet("")]
+    public async Task<IActionResult> GetBooks()
+    {
+        var query = new GetBooksQuery();
+
+        var getBooksResult = await _mediator.SendAsync(query);
+
+        return getBooksResult.Match(
+            books => Ok(books.Select(book => new BookResponse(
+                book.Id,
+                book.Title,
+                book.Author,
+                DtoConverter.ToDto(book.Genre),
+                book.PageCount))),
+            Problem
+        );
+    }
 }

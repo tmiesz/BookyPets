@@ -1,17 +1,13 @@
 using BookyPets.Application.Common.Interfaces;
 using BookyPets.Domain.BookAggregate;
 using BookyPets.Infrastructure.Common.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookyPets.Infrastructure.Books.Persistence;
 
-public class BooksRepository : IBooksRepository
+public class BooksRepository(BookyPetsDbContext dbContext) : IBooksRepository
 {
-    private readonly BookyPetsDbContext _dbContext;
-
-    public BooksRepository(BookyPetsDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly BookyPetsDbContext _dbContext = dbContext;
 
     public async Task AddBookAsync(Book book)
     {
@@ -21,5 +17,10 @@ public class BooksRepository : IBooksRepository
     public async Task<Book?> GetBookAsync(Guid bookId)
     {
         return await _dbContext.Books.FindAsync(bookId);
+    }
+
+    public async Task<IReadOnlyList<Book>> GetBooksAsync()
+    {
+        return await _dbContext.Books.ToListAsync();
     }
 }

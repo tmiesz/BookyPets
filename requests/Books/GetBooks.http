@@ -1,0 +1,6 @@
+@host = http://localhost:5293
+@bookId = 3A8D2EE9-2D3A-4ABC-A72D-472D08B04780
+@token =
+
+GET {{host}}/books/
+Authorization: Bearer {{token}}

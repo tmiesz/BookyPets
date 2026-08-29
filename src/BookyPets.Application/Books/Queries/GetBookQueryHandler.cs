@@ -5,14 +5,9 @@ using BookyPets.Shared.Result;
 
 namespace BookyPets.Application.Books.Queries;
 
-public class GetBookQueryHandler : IHandler<GetBookQuery, Result<Book>>
+public class GetBookQueryHandler(IBooksRepository booksRepository) : IHandler<GetBookQuery, Result<Book>>
 {
-    private readonly IBooksRepository _booksRepository;
-
-    public GetBookQueryHandler(IBooksRepository booksRepository)
-    {
-        _booksRepository = booksRepository;
-    }
+    private readonly IBooksRepository _booksRepository = booksRepository;
 
     public async Task<Result<Book>> HandleAsync(GetBookQuery query, CancellationToken cancellationToken = default)
     {
