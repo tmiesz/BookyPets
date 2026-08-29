@@ -1,7 +1,11 @@
+import "../css/Home.css"
+
 function Home() {
-    return <div className="books-empty">
-        <h2>No books acquired yet.</h2>
-        <p>Get some books!</p>
+
+    return <div className="home">
+        <h2>Welcome to Booky Pets.</h2>
+        <p>Log in to continue.</p>
+
     </div>
 }
 
