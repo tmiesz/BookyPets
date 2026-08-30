@@ -25,12 +25,12 @@ public class BooksRepository(BookyPetsDbContext dbContext) : IBooksRepository
 
         if(!string.IsNullOrWhiteSpace(search))
         {
-            var searchTerm = search.Trim();
+            var searchTerm = search.Trim().ToLower();
             query = query.Where(book => 
-                    book.Title.Contains(searchTerm) || 
-                    book.Author.Contains(searchTerm));
+                    book.Title.ToLower().Contains(searchTerm) || 
+                    book.Author.ToLower().Contains(searchTerm));
         }
 
-        return await _dbContext.Books.ToListAsync();
+        return await query.ToListAsync();
     }
 }
