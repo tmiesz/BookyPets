@@ -3,6 +3,7 @@ using BookyPets.Application.Common.Authorization;
 using BookyPets.Application.Pets.Commands.CreatePet;
 using BookyPets.Application.Pets.Commands.GiveExperience;
 using BookyPets.Application.Pets.Queries.GetPet;
+using BookyPets.Application.Pets.Queries.GetPets;
 using BookyPets.Contracts.Pets;
 using BookyPets.Shared.Mediator.Abstractions;
 using Microsoft.AspNetCore.Mvc;
@@ -48,6 +49,23 @@ public class PetsController(IMediator _mediator) : ApiController
 
         return getPetResult.Match(
             pet => Ok(new PetResponse(pet.Id, pet.Name, pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null, pet.Level)),
+            Problem
+        );
+    }
+
+    [HttpGet("")]
+    public async Task<IActionResult> GetPets([FromQuery] string? search)
+    {
+        var query = new GetPetsQuery(search);
+
+        var getPetsResult = await _mediator.SendAsync(query);
+
+        return getPetsResult.Match(
+            pets => Ok(pets.Select(pet => new PetResponse(
+                pet.Id,
+                pet.Name,
+                pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
+                pet.Level))),
             Problem
         );
     }
