@@ -21,16 +21,22 @@ public class BooksRepository(BookyPetsDbContext dbContext) : IBooksRepository
 
     public async Task<List<Book>> GetBooksAsync(string? search = null)
     {
-        var books = await _dbContext.Books.ToListAsync();
+        var books = _dbContext.Books.AsQueryable();
 
-        if(!string.IsNullOrWhiteSpace(search))
+        if (!string.IsNullOrWhiteSpace(search))
         {
-            var searchTerm = search.Trim().ToLower();
-            books = [.. books.Where(book => 
-                    book.Title.ToLower().Contains(searchTerm) || 
-                    book.Author.ToLower().Contains(searchTerm))];
+            var searchTerm = search.Trim();
+
+            var matchingGenres = Genre.List
+                .Where(g => g.Name.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            books = books.Where(book =>
+                    EF.Functions.Like(book.Title, $"%{searchTerm}%") ||
+                    EF.Functions.Like(book.Author, $"%{searchTerm}%") ||
+                    (book.Genre != null && matchingGenres.Contains(book.Genre)));
         }
 
-        return books;
+        return await books.ToListAsync();
     }
 }
