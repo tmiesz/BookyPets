@@ -3,7 +3,7 @@ using BookyPets.Domain.BookAggregate;
 using BookyPets.Shared.Mediator.Abstractions;
 using BookyPets.Shared.Result;
 
-namespace BookyPets.Application.Books.Queries;
+namespace BookyPets.Application.Books.Queries.GetBook;
 
 public class GetBookQueryHandler(IBooksRepository booksRepository) : IHandler<GetBookQuery, Result<Book>>
 {

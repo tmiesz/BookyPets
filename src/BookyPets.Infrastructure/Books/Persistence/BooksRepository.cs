@@ -19,18 +19,18 @@ public class BooksRepository(BookyPetsDbContext dbContext) : IBooksRepository
         return await _dbContext.Books.FindAsync(bookId);
     }
 
-    public async Task<IReadOnlyList<Book>> GetBooksAsync(string? search = null)
+    public async Task<List<Book>> GetBooksAsync(string? search = null)
     {
-        var query = _dbContext.Books.AsQueryable();
+        var books = await _dbContext.Books.ToListAsync();
 
         if(!string.IsNullOrWhiteSpace(search))
         {
             var searchTerm = search.Trim().ToLower();
-            query = query.Where(book => 
+            books = [.. books.Where(book => 
                     book.Title.ToLower().Contains(searchTerm) || 
-                    book.Author.ToLower().Contains(searchTerm));
+                    book.Author.ToLower().Contains(searchTerm))];
         }
 
-        return await query.ToListAsync();
+        return books;
     }
 }

@@ -1,6 +1,7 @@
 using BookyPets.Api.Common;
 using BookyPets.Application.Books.Commands;
-using BookyPets.Application.Books.Queries;
+using BookyPets.Application.Books.Queries.GetBook;
+using BookyPets.Application.Books.Queries.GetBooks;
 using BookyPets.Contracts.Books;
 using BookyPets.Shared.Mediator.Abstractions;
 using Microsoft.AspNetCore.Authorization;
