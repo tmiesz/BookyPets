@@ -1,0 +1,6 @@
+@host = http://localhost:5293
+@petId = 920c75af-e97c-431c-815f-2472a11ee9d5
+@token = 
+
+GET {{host}}/pets/{{petId}}
+Authorization: Bearer {{token}}
