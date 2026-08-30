@@ -11,7 +11,7 @@ public class GetBooksQueryHandler(IBooksRepository booksRepository) : IHandler<G
 
     public async Task<Result<IReadOnlyList<Book>>> HandleAsync(GetBooksQuery request, CancellationToken cancellationToken = default)
     {
-        var books = await _booksRepository.GetBooksAsync();
+        var books = await _booksRepository.GetBooksAsync(request.Search);
 
         return books.ToList();
     }

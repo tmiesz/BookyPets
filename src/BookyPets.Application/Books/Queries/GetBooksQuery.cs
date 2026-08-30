@@ -4,4 +4,4 @@ using BookyPets.Shared.Result;
 
 namespace BookyPets.Application.Books.Queries;
 
-public record GetBooksQuery() : IRequest<Result<IReadOnlyList<Book>>>;
+public record GetBooksQuery(string? Search = null) : IRequest<Result<IReadOnlyList<Book>>>;
