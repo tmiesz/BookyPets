@@ -26,10 +26,27 @@ function Home() {
         loadBooks()
     }, [])
 
-    const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
+    const handleSearch = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
-        alert(searchQuery);
-        setSearchQuery("");
+
+        if (!searchQuery.trim()) return
+        if (loading) return
+
+        setLoading(true);
+
+        try {
+            const searchResult = await getBooks(searchQuery)
+            setBooks(searchResult)
+            setError(null)
+        } catch (err) {
+            console.log(err)
+            setError("Failed to search books...")
+        } finally {
+            setLoading(false)
+        }
+
+
+        setSearchQuery("")
     };
 
     return (

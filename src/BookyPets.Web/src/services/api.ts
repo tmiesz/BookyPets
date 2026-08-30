@@ -1,10 +1,15 @@
 import type { Book } from "../types/Book"
 
-const API_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWRtaW4iLCJmYW1pbHlfbmFtZSI6IkFkbWluIiwiZW1haWwiOiJhZG1pbjJAYm9va3lwZXRzLmNvbSIsImlkIjoiNDgxYTc2MTUtOGY5OC00OWFjLTliODItZThlYmViMjA5YjA5IiwicGVybWlzc2lvbnMiOlsiYm9va3M6YWNxdWlyZSIsInBldHM6YWNxdWlyZSIsInNlc3Npb25zOnN0YXJ0Iiwic2Vzc2lvbnM6ZmluaXNoIl0sImV4cCI6MTc4ODAxMzY3OCwiaXNzIjoiQm9va3lQZXRzIiwiYXVkIjoiQm9va3lQZXRzIn0.bB_08-dJD3H4X7lmknoWT3gYkj7Y1mqskGtBtU7fzm4"
+const API_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQWRtaW4iLCJmYW1pbHlfbmFtZSI6IkFkbWluIiwiZW1haWwiOiJhZG1pbjJAYm9va3lwZXRzLmNvbSIsImlkIjoiNDgxYTc2MTUtOGY5OC00OWFjLTliODItZThlYmViMjA5YjA5IiwicGVybWlzc2lvbnMiOlsiYm9va3M6YWNxdWlyZSIsInBldHM6YWNxdWlyZSIsInNlc3Npb25zOnN0YXJ0Iiwic2Vzc2lvbnM6ZmluaXNoIl0sImV4cCI6MTc4ODA5MTk0MCwiaXNzIjoiQm9va3lQZXRzIiwiYXVkIjoiQm9va3lQZXRzIn0.vdI2sXGissqXd6WMDc6QYw6BihRi6H__E8Tlkkb4AYA"
 const BASE_URL = "http://localhost:5293"
 
-export const getBooks = async (): Promise<Book[]> => {
-    const response = await fetch(`${BASE_URL}/books`, {
+export const getBooks = async (search?: string): Promise<Book[]> => {
+    const url = new URL(`${BASE_URL}/books`);
+    if (search?.trim()) {
+        url.searchParams.set("search", search.trim())
+    }
+
+    const response = await fetch(url, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${API_TOKEN}`,
