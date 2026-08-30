@@ -2,19 +2,14 @@ using System.Reflection;
 
 namespace BookyPets.Shared.SmartEnum;
 
-public abstract class SmartEnum<TEnum> : IEquatable<SmartEnum<TEnum>>
+public abstract class SmartEnum<TEnum>(string name, int value) : IEquatable<SmartEnum<TEnum>>
    where TEnum : SmartEnum<TEnum>
 {
     private static readonly Dictionary<int, TEnum> Enumerations = CreateEnumerations();
 
-    protected SmartEnum(string name, int value)
-    {
-        Name = name;
-        Value = value;
-    }
-
-    public string Name { get; protected init; } = string.Empty;
-    public int Value { get; protected init; }
+    public string Name { get; protected init; } = name;
+    public int Value { get; protected init; } = value;
+    public static IReadOnlyCollection<TEnum> List => Enumerations.Values;
 
     public static TEnum? FromValue(int value)
     {
