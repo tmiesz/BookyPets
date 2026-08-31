@@ -2,8 +2,9 @@ import './css/App.css'
 import Home from './pages/Home'
 import Books from './pages/Books'
 import Pets from './pages/Pets'
-import { Routes, Route } from "react-router-dom"
+import NotFound from './pages/NotFound'
 import NavBar from "./components/NavBar"
+import { Routes, Route } from "react-router-dom"
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/books" element={<Books />} />
                     <Route path="/pets" element={<Pets />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </main>
         </div>
