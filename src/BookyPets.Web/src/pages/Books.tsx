@@ -1,12 +1,13 @@
 import BookCard from "../components/BookCard"
 import { useState, useEffect, type SubmitEvent } from "react";
 import { getBooks } from "../services/api";
+import type { Book } from "../types/Book";
 import "../css/Books.css"
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("");
-    const [books, setBooks] = useState([])
-    const [error, setError] = useState(null)
+    const [books, setBooks] = useState<Book[]>([]);
+    const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -44,7 +45,6 @@ function Home() {
         } finally {
             setLoading(false)
         }
-
 
         setSearchQuery("")
     };
