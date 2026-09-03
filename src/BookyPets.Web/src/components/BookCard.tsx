@@ -1,5 +1,5 @@
 import type { Book } from "../types/Book";
-import "../css/BookCard.css"
+import "../styles/BookCard.css"
 interface BookCardProps {
     book: Book
 }

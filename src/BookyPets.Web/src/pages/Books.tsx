@@ -2,7 +2,7 @@ import BookCard from "../components/BookCard"
 import { useState, useEffect, type SubmitEvent } from "react";
 import { getBooks } from "../services/api";
 import type { Book } from "../types/Book";
-import "../css/Books.css"
+import "../styles/Books.css"
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("");

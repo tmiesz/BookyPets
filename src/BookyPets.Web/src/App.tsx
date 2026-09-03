@@ -1,4 +1,4 @@
-import './css/App.css'
+import './styles/App.css'
 import Home from './pages/Home'
 import Books from './pages/Books'
 import Pets from './pages/Pets'
@@ -7,6 +7,8 @@ import NavBar from "./components/NavBar"
 import { Routes, Route } from "react-router-dom"
 import { useState } from 'react'
 import { AuthContext } from './AuthContext.ts'
+import Auth from './pages/Auth.tsx'
+import Session from './pages/Session.tsx'
 
 function App() {
     const [user, setUser] = useState({ name: "", isAuth: false })
@@ -20,12 +22,13 @@ function App() {
     }
 
     return (
-        <div>
+        <div className='app'>
             <AuthContext.Provider value={{ user, login, logout }}>
                 <NavBar />
-
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/session" element={<Session />} />
                     <Route path="/books" element={<Books />} />
                     <Route path="/pets" element={<Pets />} />
                     <Route path="*" element={<NotFound />} />
