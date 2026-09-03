@@ -1,31 +1,55 @@
 .navbar {
-  background-color: var(--color-primary-500);
-  border-radius: var(--radius-md);
-  font-size: var(--text-xl);
-  padding: var(--space-4);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--shadow-md);
+    background-color: var(--color-primary-500);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xl);
+    padding: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-md);
 }
 
 .navbar-brand {
-  font-size: var(--text-2xl);
-  font-weight: bold;
+    font-size: var(--text-2xl);
+    font-weight: bold;
 }
 
 .navbar-links {
-  display: flex;
-  gap: var(--space-8);
+    display: flex;
+    gap: var(--space-8);
 }
 
-.nav-link {
-  font-size: var(--text-base);
-  padding: var(--space-2);
-  border-radius: var(--radius-sm);
-  transition: background-color 0.2s;
+.navbar-links a {
+    font-size: var(--text-base);
+    padding: var(--space-2);
+    border-radius: var(--radius-sm);
+    transition: background-color 0.2s;
 }
 
-.nav-link:hover {
-  background-color: var(--color-primary-300);
+.navbar-links a:hover {
+    background-color: var(--color-primary-300);
+}
+
+.navbar-auth {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.btn-primary, .btn-secondary {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-base);
+    transition: background-color 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--color-primary-300);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-200);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-primary-300);
 }
