@@ -1,6 +1,7 @@
 body {
     background: var(--color-neutral-200);
     color: var(--color-neutral-900);
+    font-family: nunito;
 }
 
 .main-content {
