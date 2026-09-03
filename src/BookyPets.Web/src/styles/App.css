@@ -1,3 +1,8 @@
+body {
+    background: var(--color-neutral-200);
+    color: var(--color-neutral-900);
+}
+
 .main-content {
     flex: 1;
     padding: 2rem;
