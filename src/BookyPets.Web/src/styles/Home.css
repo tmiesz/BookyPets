@@ -1,0 +1,29 @@
+.home-hero {
+    padding: var(--space-12) var(--space-6);
+    text-align: center;
+}
+
+.home-title {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-4xl);
+}
+
+.home-subtitle {
+    font-size: var(--text-base);
+}
+
+.container {
+    width: min(1200px, 90%);
+    margin: 0 auto var(--space-10);
+}
+
+.page-title {
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-2xl);
+}
+
+.container-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-6);
+}
