@@ -14,16 +14,16 @@ export default function NavBar() {
         <div className="navbar-links">
             {user.isAuth && (
                 <>
-                    <Link to="/session">Session</Link>
-                    <Link to="/books">Books</Link>
-                    <Link to="/pets">Pets</Link>
+                    <Link to="/session" className="navbar-link">Session</Link>
+                    <Link to="/books" className="navbar-link">Books</Link>
+                    <Link to="/pets" className="navbar-link">Pets</Link>
                 </>
             )}
         </div>
 
         <div className="navbar-auth">
-            <Link to="/auth" className="btn-secondary">Login</Link>
-            <Link to="/auth" className="btn-primary">SignUp</Link>
+            <Link to="/auth" className="btn btn-secondary">Login</Link>
+            <Link to="/auth" className="btn btn-primary">SignUp</Link>
         </div>
     </nav >
 }
