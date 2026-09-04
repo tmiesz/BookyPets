@@ -1,5 +1,5 @@
 .navbar {
-    background-color: var(--color-primary-500);
+    background-color: var(--color-neutral-100);
     border-radius: var(--radius-md);
     font-size: var(--text-xl);
     padding: var(--space-4);
@@ -27,7 +27,7 @@
 }
 
 .navbar-link:hover {
-    background-color: var(--color-primary-300);
+    background-color: var(--color-neutral-200);
 }
 
 .navbar-auth {
@@ -43,13 +43,18 @@
 }
 
 .btn-primary {
-    background-color: var(--color-primary-300);
+    background-color: var(--color-primary-500);
 }
 
 .btn-primary:hover {
-    background-color: var(--color-primary-200);
+    background-color: var(--color-primary-600);
+}
+
+.btn-secondary {
+    background-color: var(--color-neutral-300);
 }
 
 .btn-secondary:hover {
-    background-color: var(--color-primary-300);
+    background-color: var(--color-neutral-400);
 }
+
