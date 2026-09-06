@@ -3,6 +3,7 @@ using System;
 using BookyPets.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookyPets.Infrastructure.Migrations
 {
     [DbContext(typeof(BookyPetsDbContext))]
-    partial class BookyPetsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260906144921_AddSpeciesToPet")]
+    partial class AddSpeciesToPet
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.3");
