@@ -21,7 +21,7 @@ public class GiveExperienceTests
     [Fact]
     public async Task GiveExperience_WhenValidPet_ShouldReturnNoContent()
     {
-        var createResponse = await _client.PostAsJsonAsync("Pets", new CreatePetRequest(Constants.Pet.Name, Constants.Pet.FavouriteContractsGenre));
+        var createResponse = await _client.PostAsJsonAsync("Pets", new CreatePetRequest(Constants.Pet.Name, Constants.Pet.ContractSpecies, Constants.Pet.FavouriteContractsGenre));
         var pet = await createResponse.Content.ReadFromJsonAsync<PetResponse>();
 
         var response = await _client.PostAsync($"Pets/{pet!.Id}/experience/100", null);

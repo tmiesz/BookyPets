@@ -21,7 +21,7 @@ public class GetPetTests
     [Fact]
     public async Task GetPet_WhenPetExists_ShouldReturnPet()
     {
-        var createResponse = await _client.PostAsJsonAsync("Pets", new CreatePetRequest(Constants.Pet.Name, Constants.Pet.FavouriteContractsGenre));
+        var createResponse = await _client.PostAsJsonAsync("Pets", new CreatePetRequest(Constants.Pet.Name, Constants.Pet.ContractSpecies, Constants.Pet.FavouriteContractsGenre));
         var created = await createResponse.Content.ReadFromJsonAsync<PetResponse>();
 
         var response = await _client.GetAsync($"Pets/{created!.Id}");
