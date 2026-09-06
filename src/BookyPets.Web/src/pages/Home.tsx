@@ -1,4 +1,5 @@
 import BookCard from "../components/BookCard";
+import PetCard from "../components/PetCard";
 import { getBooks } from "../data/booksmock";
 import { getPets } from "../data/petsmock";
 import "../styles/Home.css"
@@ -25,6 +26,11 @@ function Home() {
 
             <div className="container">
                 <h2 className="page-title">Pets</h2>
+                <div className="container-grid">
+                    {pets.map((pet) => (
+                        <PetCard pet={pet}/>
+                    ))}
+                </div>
             </div>
         </div>
     )

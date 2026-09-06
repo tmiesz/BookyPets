@@ -1,0 +1,15 @@
+.pet-card {
+    display: flex;
+    flex-direction: row;
+}
+
+.pet-image img {
+    width: 100px;
+    height: auto;
+    display: block;
+}
+
+.pet-info {
+    flex: 1;
+    padding-left: 1rem;
+}
