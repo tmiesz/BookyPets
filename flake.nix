@@ -15,6 +15,8 @@
       devShells.${system}.default = pkgs.mkShell {
         packages = with pkgs; [
           dotnet-sdk_10
+          dotnet-ef
+          sqlite
           nodejs_22
         ];
 
