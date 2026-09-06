@@ -1,5 +1,6 @@
 using BookyPets.Application.Common.Authorization;
 using BookyPets.Domain.BookAggregate;
+using BookyPets.Domain.PetAggregate;
 using BookyPets.Domain.ReaderAggregate;
 using BookyPets.Shared.Mediator.Abstractions;
 using BookyPets.Shared.Result;

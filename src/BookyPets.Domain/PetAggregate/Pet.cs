@@ -7,6 +7,7 @@ namespace BookyPets.Domain.PetAggregate;
 public class Pet : AggregateRoot
 {
     public string Name { get; private set; }
+    public Species Species { get; private set; }
     public Genre? FavouriteGenre { get; private set; }
     private int _experience;
     public int Level { get; private set; }
@@ -16,9 +17,10 @@ public class Pet : AggregateRoot
         Name = null!;
     }
 
-    public Pet(string name, Genre? favouriteGenre, Guid? id = null) : base(id ?? Guid.NewGuid())
+    public Pet(string name, Species species, Genre? favouriteGenre, Guid? id = null) : base(id ?? Guid.NewGuid())
     {
         Name = name;
+        Species = species;
         FavouriteGenre = favouriteGenre;
         Level = 1;
     }

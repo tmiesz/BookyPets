@@ -18,7 +18,7 @@ public class CreatePetCommandHandler : IHandler<CreatePetCommand, Result<Pet>>
 
     public async Task<Result<Pet>> HandleAsync(CreatePetCommand request, CancellationToken cancellationToken = default)
     {
-        var pet = new Pet(name: request.Name, favouriteGenre: request.Genre);
+        var pet = new Pet(name: request.Name, species: request.Species, favouriteGenre: request.Genre);
 
         await _petsRepository.AddPetAsync(pet);
         await _unitOfWork.CommitChangesAsync();

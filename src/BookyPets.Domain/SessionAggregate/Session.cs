@@ -1,6 +1,5 @@
 using BookyPets.Domain.BookAggregate;
 using BookyPets.Domain.Common;
-using BookyPets.Domain.Common.Interfaces;
 using BookyPets.Domain.SessionAggregate.Events;
 using BookyPets.Shared.Result;
 

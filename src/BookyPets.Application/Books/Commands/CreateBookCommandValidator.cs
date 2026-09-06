@@ -1,4 +1,5 @@
 using BookyPets.Domain.BookAggregate;
+using BookyPets.Domain.PetAggregate;
 using BookyPets.Shared.Validator;
 
 namespace BookyPets.Application.Books.Commands;

@@ -1,6 +1,7 @@
 using BookyPets.Api;
 using BookyPets.Application;
 using BookyPets.Infrastructure;
+using Microsoft.Extensions.FileProviders;
 
 var BookyPetsWebOrigin = "_bookyPetsWebOrigin";
 
@@ -29,6 +30,13 @@ var app = builder.Build();
     app.UseAuthorization();
     app.MapControllers();
     app.UseCors(BookyPetsWebOrigin);
+
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+                    Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "icons")),
+        RequestPath = "/icons"
+    });
 
     app.Run();
 }

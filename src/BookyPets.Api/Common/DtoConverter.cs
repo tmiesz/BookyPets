@@ -1,9 +1,11 @@
 using BookyPets.Contracts.Books;
 using BookyPets.Contracts.Readers;
 using BookyPets.Contracts.Sessions;
+using BookyPets.Contracts.Pets;
 using DomainGenre = BookyPets.Domain.BookAggregate.Genre;
 using DomainAccountType = BookyPets.Domain.ReaderAggregate.AccountType;
 using DomainSessionStatus = BookyPets.Domain.SessionAggregate.SessionStatus;
+using DomainSpecies = BookyPets.Domain.PetAggregate.Species;
 
 namespace BookyPets.Api.Common;
 
@@ -20,6 +22,10 @@ public static class DtoConverter
     public static SessionStatus ToDto(DomainSessionStatus sessionStatus) => MapToEnum<SessionStatus>(sessionStatus.Name);
     public static bool TryToDomain(SessionStatus sessionStatus, out DomainSessionStatus domainSessionStatus)
          => DomainSessionStatus.TryFromName(sessionStatus.ToString(), out domainSessionStatus!);
+
+    public static Species ToDto(DomainSpecies species) => MapToEnum<Species>(species.Name);
+    public static bool TryToDomain(Species species, out DomainSpecies domainSpecies)
+         => DomainSpecies.TryFromName(species.ToString(), out domainSpecies!);
 
     private static T MapToEnum<T>(string name) where T : struct, Enum
     {

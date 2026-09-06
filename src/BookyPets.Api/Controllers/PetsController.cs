@@ -8,6 +8,7 @@ using BookyPets.Contracts.Pets;
 using BookyPets.Shared.Mediator.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using DomainGenre = BookyPets.Domain.BookAggregate.Genre;
+using DomainSpecies = BookyPets.Domain.PetAggregate.Species;
 
 namespace BookyPets.Api.Controllers;
 
@@ -19,6 +20,7 @@ public class PetsController(IMediator _mediator) : ApiController
     public async Task<IActionResult> CreatePet(CreatePetRequest request)
     {
         DomainGenre? genre = null;
+        DomainSpecies? species = null;
 
         if (request.FavouriteGenre.HasValue)
         {
@@ -30,12 +32,26 @@ public class PetsController(IMediator _mediator) : ApiController
             genre = domainGenre;
         }
 
-        var command = new CreatePetCommand(request.Name, genre);
+
+        if (!DtoConverter.TryToDomain(request.Species, out var domainSpecies))
+        {
+            return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "Invalid species type");
+        }
+
+        species = domainSpecies;
+
+        var command = new CreatePetCommand(request.Name, species, genre);
 
         var createPetResult = await _mediator.SendAsync(command);
 
         return createPetResult.Match(
-            pet => Ok(new PetResponse(pet.Id, pet.Name, pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null, pet.Level)),
+            pet => Ok(new PetResponse(
+                pet.Id,
+                pet.Name,
+                DtoConverter.ToDto(pet.Species),
+                IconResolver.Species.Resolve(species),
+                pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
+                pet.Level)),
             Problem
         );
     }
@@ -48,7 +64,13 @@ public class PetsController(IMediator _mediator) : ApiController
         var getPetResult = await _mediator.SendAsync(query);
 
         return getPetResult.Match(
-            pet => Ok(new PetResponse(pet.Id, pet.Name, pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null, pet.Level)),
+            pet => Ok(new PetResponse(
+                pet.Id,
+                pet.Name,
+                DtoConverter.ToDto(pet.Species),
+                IconResolver.Species.Resolve(pet.Species),
+                pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
+                pet.Level)),
             Problem
         );
     }
@@ -64,6 +86,8 @@ public class PetsController(IMediator _mediator) : ApiController
             pets => Ok(pets.Select(pet => new PetResponse(
                 pet.Id,
                 pet.Name,
+                DtoConverter.ToDto(pet.Species),
+                IconResolver.Species.Resolve(pet.Species),
                 pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
                 pet.Level))),
             Problem

@@ -8,4 +8,4 @@ using BookyPets.Shared.Result;
 namespace BookyPets.Application.Pets.Commands.CreatePet;
 
 [Authorize(Roles = Role.Admin)]
-public record CreatePetCommand(string Name, Genre? Genre) : IRequest<Result<Pet>>;
+public record CreatePetCommand(string Name, Species Species, Genre? Genre) : IRequest<Result<Pet>>;
