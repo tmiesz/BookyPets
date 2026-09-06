@@ -1,5 +1,6 @@
 using BookyPets.Domain.BookAggregate;
 using BookyPets.Domain.Common.Interfaces;
+using BookyPets.Domain.PetAggregate;
 using BookyPets.Domain.SessionAggregate;
 using BookyPets.Domain.Tests.TestConstants;
 using BookyPets.Domain.Tests.TestUtils;
