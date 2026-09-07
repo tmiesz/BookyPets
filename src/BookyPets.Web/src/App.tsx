@@ -5,25 +5,14 @@ import Pets from './pages/Pets'
 import NotFound from './pages/NotFound'
 import NavBar from "./components/NavBar"
 import { Routes, Route } from "react-router-dom"
-import { useState } from 'react'
-import { AuthContext } from './AuthContext.ts'
 import Auth from './pages/Auth.tsx'
 import Session from './pages/Session.tsx'
+import AuthProvider from './context/AuthContext.tsx'
 
 function App() {
-    const [user, setUser] = useState({ name: "", isAuth: false })
-
-    function login(name: string) {
-        setUser({ name: name, isAuth: true })
-    }
-
-    function logout() {
-        setUser({ name: "", isAuth: false })
-    }
-
     return (
-        <div className='app'>
-            <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthProvider>
+            <div className='app'>
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -33,8 +22,8 @@ function App() {
                     <Route path="/pets" element={<Pets />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
-            </AuthContext.Provider>
-        </div>
+            </div>
+        </AuthProvider >
     );
 }
 

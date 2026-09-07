@@ -1,34 +1,103 @@
-import { useContext, useState, type SubmitEvent } from "react";
-import { AuthContext } from "../AuthContext";
+import { useState, useContext } from "react";
+import { useForm } from "react-hook-form";
+import { AuthContext } from "../context/AuthContext";
 
+interface AuthFormData {
+    firstname: string,
+    lastname: string,
+    email: string,
+    password: string
+}
 
 export default function Auth() {
-    const [name, setName] = useState("")
-    const { user, login } = useContext(AuthContext)
+    const [mode, setMode] = useState("signup");
 
-    function handleSubmit(e: SubmitEvent) {
-        e.preventDefault();
-        if (!name.trim()) return
-        login(name);
+    const authContext = useContext(AuthContext);
+    if (!authContext) throw new Error("Auth must be used within AuthProvider");
+    const auth = authContext;
+
+    const { register, handleSubmit, formState: { errors } }
+        = useForm<AuthFormData>();
+
+    async function onSubmit(data: AuthFormData) {
+        if (mode === "signup") {
+            await auth.signUp(data.firstname, data.lastname, data.email, data.password);
+        }
+        else {
+            await auth.login(data.email, data.password);
+        }
     }
 
     return (
 
-        <div className="login">
-            <form onSubmit={handleSubmit}>
-                <label>Name
-                    <input
-                        type="text"
-                        placeholder="Type any name..."
-                        value={name}
-                        onChange={(e) => setName(e.target.value)} />
-                </label>
-                <button type="submit">
-                    Log in
-                </button>
-            </form>
+        <div className="page">
+            <div className="container">
+                <div className="auth-container">
+                    <h1 className="page-title">{mode === "signup" ? "Sign Up" : "Login"}</h1>
+                    <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
 
-            {user.isAuth && <p>User logged in.</p>}
+                        {mode === "signup" && <div className="form-group">
+                            <label className="form-label" htmlFor="firstname">First Name
+                                <input className="form-input"
+                                    id="firstname"
+                                    type="text"
+                                    {...register('firstname', { required: "First name is required" })}
+                                />
+                            </label>
+                            {errors.firstname && <span className="form-error">{errors.firstname.message}</span>}
+                        </div>}
+
+                        {mode === "signup" && <div className="form-group">
+                            <label className="form-label" htmlFor="lastname">Last Name
+                                <input className="form-input"
+                                    id="lastname"
+                                    type="text"
+                                    {...register('lastname', { required: "Last name is required" })}
+                                />
+                            </label>
+                            {errors.lastname && <span className="form-error">{errors.lastname.message}</span>}
+                        </div>}
+
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="email">Email
+                                <input className="form-input"
+                                    id="email"
+                                    type="email"
+                                    {...register('email', { required: "Email is required" })}
+                                />
+                            </label>
+                            {errors.email && <span className="form-error">{errors.email.message}</span>}
+                        </div>
+
+                        <div className="form-group">
+                            <label className="form-label" htmlFor="password">Password
+                                <input className="form-input"
+                                    id="password"
+                                    type="password"
+                                    {...register('password', {
+                                        required: "Password is required",
+                                        minLength: { value: 6, message: "Password must be at least 6 characters" },
+                                        maxLength: { value: 12, message: "Password must be less than 12 characters" }
+                                    })}
+                                />
+                            </label>
+                            {errors.password && <span className="form-error">{errors.password.message}</span>}
+                        </div>
+
+                        <button className="btn btn-primary btn-large" type="submit">
+                            Sign Up
+                        </button>
+                    </form>
+
+                    <div className="auth-switch">
+                        {mode === "signup" ?
+                            <p>Already have an account? <span className="auth-link" onClick={() => setMode("login")}>Login</span></p>
+                            :
+                            <p>Dont have an account?<span className="auth-link" onClick={() => setMode("signup")}>Sign up</span></p>}
+                    </div>
+                </div>
+            </div>
+
         </div>
     )
 }

@@ -1,4 +1,5 @@
 export interface User {
-    name: string;
-    isAuth: boolean;
+    firstname: string;
+    lastname: string;
+    email: string;
 }
