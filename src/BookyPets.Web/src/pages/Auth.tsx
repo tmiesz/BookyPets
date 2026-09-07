@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthContext";
+import "../styles/Auth.css"
 
 interface AuthFormData {
     firstname: string,
