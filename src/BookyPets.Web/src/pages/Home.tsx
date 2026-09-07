@@ -19,7 +19,7 @@ function Home() {
                 <h2 className="page-title">Books</h2>
                 <div className="container-grid">
                     {books.map((book) => (
-                        <BookCard book={book}/>
+                        <BookCard book={book} key={book.id} />
                     ))}
                 </div>
             </div>
@@ -28,7 +28,7 @@ function Home() {
                 <h2 className="page-title">Pets</h2>
                 <div className="container-grid">
                     {pets.map((pet) => (
-                        <PetCard pet={pet}/>
+                        <PetCard pet={pet} key={pet.id} />
                     ))}
                 </div>
             </div>
