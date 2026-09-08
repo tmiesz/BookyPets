@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import "../styles/Login.css"
 
 interface AuthFormData {
@@ -15,11 +16,14 @@ export default function Login() {
     if (!authContext) throw new Error("Auth must be used within AuthProvider");
     const { login, error } = authContext;
 
+    const navigate = useNavigate()
+
     const { register, handleSubmit, formState: { errors } }
         = useForm<AuthFormData>();
 
     async function onSubmit(data: AuthFormData) {
-        await login(data.email, data.password);
+        const success =  await login(data.email, data.password);
+        if (success) navigate("/")
     }
 
     return (

@@ -6,8 +6,8 @@ import type { ApiError } from "../types/ApiError.ts";
 interface AuthContextType {
     user: User | null;
     token: string | null;
-    signUp: (firstName: string, lastName: string, email: string, password: string) => Promise<void>;
-    login: (email: string, password: string) => Promise<void>;
+    signUp: (firstName: string, lastName: string, email: string, password: string) => Promise<boolean>;
+    login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
     loading: boolean;
     error: ApiError | null;
@@ -30,7 +30,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     const [error, setError] = useState<ApiError | null>(null);
 
 
-    async function signUp(firstname: string, lastname: string, email: string, password: string) {
+    async function signUp(firstname: string, lastname: string, email: string, password: string): Promise<boolean> {
         setLoading(true);
         setError(null);
 
@@ -49,10 +49,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             if (!res.ok) {
                 const data: ApiError = await res.json();
                 setError(data);
-                return;
+                return false;
             }
             const data: AuthResponse = await res.json();
             handleAuthSuccess(data);
+
+            return true;
         } catch (err) {
             setError({
                 type: "",
@@ -61,13 +63,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 detail: "Something went wrong",
                 straceId: ""
             });
+
+            return false;
         }
         finally {
             setLoading(false)
         }
     }
 
-    async function login(email: string, password: string) {
+    async function login(email: string, password: string): Promise<boolean> {
         setLoading(true);
         setError(null);
 
@@ -84,10 +88,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             if (!res.ok) {
                 const data: ApiError = await res.json();
                 setError(data);
-                return;
+                return false;
             }
             const data: AuthResponse = await res.json();
             handleAuthSuccess(data);
+
+            return true;
         } catch (err) {
             setError({
                 type: "",
@@ -96,6 +102,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 detail: "Something went wrong",
                 straceId: ""
             });
+
+            return false;
         }
         finally {
             setLoading(false)
