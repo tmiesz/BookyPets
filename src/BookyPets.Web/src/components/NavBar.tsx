@@ -14,7 +14,7 @@ export default function NavBar() {
         </div>
 
         <div className="navbar-links">
-            {auth.user && (
+            {auth.token && (
                 <>
                     <Link to="/session" className="navbar-link">Session</Link>
                     <Link to="/books" className="navbar-link">Books</Link>
