@@ -77,8 +77,22 @@ export default function Auth() {
                                     type="password"
                                     {...register('password', {
                                         required: "Password is required",
-                                        minLength: { value: 6, message: "Password must be at least 6 characters" },
-                                        maxLength: { value: 12, message: "Password must be less than 12 characters" }
+                                        minLength: { value: 8, message: "Password must be at least 8 characters" },
+                                        maxLength: { value: 100, message: "Password must be less than 100 characters" },
+                                        validate: {
+                                            uppercase: value =>
+                                                (value.match(/[A-Z]/g) || []).length >= 2 ||
+                                                "Password must contain atleast 2 uppercase letters.",
+                                            lowercase: value =>
+                                                (value.match(/[a-z]/g) || []).length >= 3 ||
+                                                "Password must contain atleast 3 lowercase letters.",
+                                            numbers: value =>
+                                                (value.match(/[0-9]/g) || []).length >= 2 ||
+                                                "Password must contain atleast 2 numbers.",
+                                            special: value =>
+                                                /[!@#$&*]/.test(value) ||
+                                                "Password must contain atleast 2 uppercase letters."
+                                        }
                                     })}
                                 />
                             </label>
