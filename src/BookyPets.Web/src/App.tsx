@@ -5,9 +5,10 @@ import Pets from './pages/Pets'
 import NotFound from './pages/NotFound'
 import NavBar from "./components/NavBar"
 import { Routes, Route } from "react-router-dom"
-import Auth from './pages/Auth.tsx'
 import Session from './pages/Session.tsx'
 import AuthProvider from './context/AuthContext.tsx'
+import Login from './pages/Login.tsx'
+import Register from './pages/Register.tsx'
 
 function App() {
     return (
@@ -16,7 +17,8 @@ function App() {
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="/session" element={<Session />} />
                     <Route path="/books" element={<Books />} />
                     <Route path="/pets" element={<Pets />} />

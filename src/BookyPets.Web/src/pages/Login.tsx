@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthContext";
-import "../styles/Auth.css"
+import "../styles/Login.css"
 
 interface AuthFormData {
     firstname: string,
@@ -10,23 +10,16 @@ interface AuthFormData {
     password: string
 }
 
-export default function Auth() {
-    const [mode, setMode] = useState("signup");
-
+export default function Login() {
     const authContext = useContext(AuthContext);
     if (!authContext) throw new Error("Auth must be used within AuthProvider");
-    const { signUp, login, logout, error } = authContext;
+    const { login, error } = authContext;
 
     const { register, handleSubmit, formState: { errors } }
         = useForm<AuthFormData>();
 
     async function onSubmit(data: AuthFormData) {
-        if (mode === "signup") {
-            await signUp(data.firstname, data.lastname, data.email, data.password);
-        }
-        else {
-            await login(data.email, data.password);
-        }
+        await login(data.email, data.password);
     }
 
     return (
@@ -34,33 +27,10 @@ export default function Auth() {
         <div className="page">
             <div className="container">
                 <div className="auth-container">
-                    <button onClick={() => logout()}>Logout</button>
-                    <h1 className="page-title">{mode === "signup" ? "Sign Up" : "Login"}</h1>
+                    <h1 className="page-title">Login</h1>
                     <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
 
                         {error && <div className="error-message">{error.detail}</div>}
-
-                        {mode === "signup" && <div className="form-group">
-                            <label className="form-label" htmlFor="firstname">First Name
-                                <input className="form-input"
-                                    id="firstname"
-                                    type="text"
-                                    {...register('firstname', { required: "First name is required" })}
-                                />
-                            </label>
-                            {errors.firstname && <span className="form-error">{errors.firstname.message}</span>}
-                        </div>}
-
-                        {mode === "signup" && <div className="form-group">
-                            <label className="form-label" htmlFor="lastname">Last Name
-                                <input className="form-input"
-                                    id="lastname"
-                                    type="text"
-                                    {...register('lastname', { required: "Last name is required" })}
-                                />
-                            </label>
-                            {errors.lastname && <span className="form-error">{errors.lastname.message}</span>}
-                        </div>}
 
                         <div className="form-group">
                             <label className="form-label" htmlFor="email">Email
@@ -108,10 +78,7 @@ export default function Auth() {
                     </form>
 
                     <div className="auth-switch">
-                        {mode === "signup" ?
-                            <p>Already have an account? <span className="auth-link" onClick={() => setMode("login")}>Login</span></p>
-                            :
-                            <p>Dont have an account?<span className="auth-link" onClick={() => setMode("signup")}>Sign up</span></p>}
+                        <p>Dont have an account?<span className="auth-link">Sign up</span></p>
                     </div>
                 </div>
             </div>
