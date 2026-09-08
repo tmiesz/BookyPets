@@ -1,6 +1,7 @@
 import { createContext, useState, type ReactNode } from "react";
 import type { User } from "../types/User";
 import { BASE_URL } from "../services/api.ts"
+import type { ApiError } from "../types/ApiError.ts";
 
 interface AuthContextType {
     user: User | null;
@@ -9,7 +10,7 @@ interface AuthContextType {
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
     loading: boolean;
-    error: string | null;
+    error: ApiError | null;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -26,7 +27,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"))
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<ApiError | null>(null);
 
 
     async function signUp(firstname: string, lastname: string, email: string, password: string) {
@@ -46,14 +47,20 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             });
 
             if (!res.ok) {
-                const text = await res.text();
-                throw new Error(text || "Registration failed");
+                const data: ApiError = await res.json();
+                setError(data);
+                return;
             }
             const data: AuthResponse = await res.json();
             handleAuthSuccess(data);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Registration failed");
-            throw err
+            setError({
+                type: "",
+                title: "Error",
+                status: 0,
+                detail: "Something went wrong",
+                straceId: ""
+            });
         }
         finally {
             setLoading(false)
@@ -75,14 +82,20 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             });
 
             if (!res.ok) {
-                const text = await res.text();
-                throw new Error(text || "Login failed");
+                const data: ApiError = await res.json();
+                setError(data);
+                return;
             }
             const data: AuthResponse = await res.json();
             handleAuthSuccess(data);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Login failed");
-            throw err
+            setError({
+                type: "",
+                title: "Error",
+                status: 0,
+                detail: "Something went wrong",
+                straceId: ""
+            });
         }
         finally {
             setLoading(false)
