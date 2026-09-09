@@ -6,7 +6,7 @@ const books: Book[] = [
         title: "Meditations",
         author: "Marcus Aurelius",
         genre: "Philosophy",
-        iconUrl: "http://localhost:5293/icons/books/philosophy.png",
+        iconUrl: "/icons/books/philosophy.png",
         pageCount: 304,
     },
     {
@@ -14,7 +14,7 @@ const books: Book[] = [
         title: "Dune",
         author: "Frank Herbert",
         genre: "Fiction",
-        iconUrl: "http://localhost:5293/icons/books/fiction.png",
+        iconUrl: "/icons/books/fiction.png",
         pageCount: 412,
     },
     {
@@ -22,7 +22,7 @@ const books: Book[] = [
         title: "A Brief History of Time",
         author: "Stephen Hawking",
         genre: "Science",
-        iconUrl: "http://localhost:5293/icons/books/science.png",
+        iconUrl: "/icons/books/science.png",
         pageCount: 256,
     },
     {
@@ -30,7 +30,7 @@ const books: Book[] = [
         title: "The Hobbit",
         author: "J.R.R. Tolkien",
         genre: "Fantasy",
-        iconUrl: "http://localhost:5293/icons/books/fantasy.png",
+        iconUrl: "/icons/books/fantasy.png",
         pageCount: 310,
     },
     {
@@ -38,7 +38,7 @@ const books: Book[] = [
         title: "The Psychology of Money",
         author: "Morgan Housel",
         genre: "Psychology",
-        iconUrl: "http://localhost:5293/icons/books/psychology.png",
+        iconUrl: "/icons/books/psychology.png",
         pageCount: 256,
     },
 ];

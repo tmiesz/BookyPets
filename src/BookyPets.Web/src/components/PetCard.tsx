@@ -1,5 +1,6 @@
 import type { Pet } from "../types/Pet";
 import "../styles/PetCard.css"
+import { BASE_URL } from "../services/api";
 
 interface PetCardProps {
     pet: Pet
@@ -23,7 +24,7 @@ export default function PetCard({ pet }: PetCardProps) {
                     +
                 </button>
                 <div className="pet-image">
-                    <img src={`http://localhost:5293/${pet.iconUrl}`} />
+                    <img src={`${BASE_URL}${pet.iconUrl}`} />
                 </div>
             </div>
         </div>

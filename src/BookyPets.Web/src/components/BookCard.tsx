@@ -1,5 +1,6 @@
 import type { Book } from "../types/Book";
 import "../styles/BookCard.css"
+import { BASE_URL } from "../services/api";
 
 interface BookCardProps {
     book: Book
@@ -24,7 +25,7 @@ function BookCard({ book }: BookCardProps) {
                     +
                 </button>
                 <div className="book-image">
-                    <img src={`http://localhost:5293/${book.iconUrl}`} />
+                    <img src={`${BASE_URL}${book.iconUrl}`} />
                 </div>
             </div>
         </div>
