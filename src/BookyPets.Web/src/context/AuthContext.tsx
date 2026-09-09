@@ -23,9 +23,30 @@ interface AuthResponse {
     token: string
 }
 
+function getValidToken(): string | null {
+    const token = localStorage.getItem("token");
+
+    if (!token) return null;
+
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+
+        if (payload.exp * 1000 <= Date.now()) {
+            localStorage.removeItem("token");
+            return null;
+        }
+
+        return null;
+    }
+    catch {
+        localStorage.removeItem("token");
+        return null;
+    }
+}
+
 export default function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"))
+    const [token, setToken] = useState<string | null>(() => getValidToken())
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError | null>(null);
 

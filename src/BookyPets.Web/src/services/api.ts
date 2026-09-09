@@ -4,23 +4,7 @@ import type { Pet } from "../types/Pet";
 export const BASE_URL = "http://localhost:5293"
 
 function getToken(): string | null {
-    const token = localStorage.getItem("token");
-
-    if (!token) return null;
-
-    try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-
-        if (payload.exp * 1000 <= Date.now()) {
-            localStorage.removeItem("token");
-            return null;
-        }
-
-        return token;
-    } catch {
-        localStorage.removeItem("token");
-        return null;
-    }
+    return localStorage.getItem("token");
 }
 
 function authHeaders(): HeadersInit {
