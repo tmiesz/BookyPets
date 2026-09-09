@@ -24,7 +24,7 @@ function BookCard({ book }: BookCardProps) {
                     +
                 </button>
                 <div className="book-image">
-                    <img src={book.iconUrl} />
+                    <img src={`http://localhost:5293/${book.iconUrl}`} />
                 </div>
             </div>
         </div>
