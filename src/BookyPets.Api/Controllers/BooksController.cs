@@ -1,7 +1,7 @@
 using BookyPets.Api.Common;
 using BookyPets.Application.Books.Commands;
 using BookyPets.Application.Books.Queries.GetBook;
-using BookyPets.Application.Books.Queries.GetBooks;
+using BookyPets.Application.Books.Queries.SearchBooks;
 using BookyPets.Contracts.Books;
 using BookyPets.Shared.Mediator.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -58,9 +58,9 @@ public class BooksController(IMediator _mediator) : ApiController
     }
 
     [HttpGet("")]
-    public async Task<IActionResult> GetBooks([FromQuery] string? search)
+    public async Task<IActionResult> SearchBooks([FromQuery] string? search)
     {
-        var query = new GetBooksQuery(search);
+        var query = new SearchBooksQuery(search);
 
         var getBooksResult = await _mediator.SendAsync(query);
 

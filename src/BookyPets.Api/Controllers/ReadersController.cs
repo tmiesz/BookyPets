@@ -4,6 +4,10 @@ using BookyPets.Application.Readers.Commands.AcquirePet;
 using BookyPets.Application.Readers.Commands.ChangeAccountType;
 using BookyPets.Application.Readers.Queries.GetProgress;
 using BookyPets.Application.Readers.Queries.GetReader;
+using BookyPets.Application.Readers.Queries.GetReaderBooks;
+using BookyPets.Application.Readers.Queries.GetReaderPets;
+using BookyPets.Contracts.Books;
+using BookyPets.Contracts.Pets;
 using BookyPets.Contracts.Readers;
 using BookyPets.Shared.Mediator.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -56,7 +60,25 @@ public class ReadersController(IMediator _mediator) : ApiController
             Problem);
     }
 
-    [HttpPost("/books/{bookId:guid}/acquire")]
+    [HttpGet("pets")]
+    public async Task<IActionResult> GetPets()
+    {
+        var query = new GetReaderPetsQuery();
+
+        var getPetsResult = await _mediator.SendAsync(query);
+
+        return getPetsResult.Match(
+            pets => Ok(pets.Select(pet => new PetResponse(
+                pet.Id,
+                pet.Name,
+                DtoConverter.ToDto(pet.Species),
+                IconResolver.Species.Resolve(pet.Species),
+                pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
+                pet.Level))),
+            Problem);
+    }
+
+    [HttpPost("books/{bookId:guid}/acquire")]
     public async Task<IActionResult> AcquireBook(Guid bookId)
     {
         var command = new AcquireBookCommand(bookId);
@@ -65,6 +87,24 @@ public class ReadersController(IMediator _mediator) : ApiController
 
         return acquireBookResult.Match(
             _ => NoContent(),
+            Problem);
+    }
+
+    [HttpGet("books")]
+    public async Task<IActionResult> GetBooks()
+    {
+        var query = new GetReaderBooksQuery();
+
+        var getBooksResult = await _mediator.SendAsync(query);
+
+        return getBooksResult.Match(
+            books => Ok(books.Select(book => new BookResponse(
+                book.Id,
+                book.Title,
+                book.Author,
+                DtoConverter.ToDto(book.Genre),
+                IconResolver.Genre.Resolve(book.Genre),
+                book.PageCount))),
             Problem);
     }
 

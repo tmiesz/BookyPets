@@ -20,7 +20,14 @@ public class PetsRepository(BookyPetsDbContext dbContext) : IPetsRepository
         return await _dbContext.Pets.FindAsync(petId);
     }
 
-    public async Task<List<Pet>> GetPetsAsync(string? search = null)
+    public async Task<List<Pet>> GetPetsAsync(List<Guid> petIds)
+    {
+        return await _dbContext.Pets
+            .Where(p => petIds.Contains(p.Id))
+            .ToListAsync();
+    }
+
+    public async Task<List<Pet>> SearchPetsAsync(string? search = null)
     {
         var pets = _dbContext.Pets.AsQueryable();
 

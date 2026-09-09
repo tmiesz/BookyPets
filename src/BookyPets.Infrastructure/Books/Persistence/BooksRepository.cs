@@ -19,7 +19,14 @@ public class BooksRepository(BookyPetsDbContext dbContext) : IBooksRepository
         return await _dbContext.Books.FindAsync(bookId);
     }
 
-    public async Task<List<Book>> GetBooksAsync(string? search = null)
+    public async Task<List<Book>> GetBooksAsync(List<Guid> bookIds)
+    {
+        return await _dbContext.Books
+            .Where(p => bookIds.Contains(p.Id))
+            .ToListAsync();
+    }
+
+    public async Task<List<Book>> SearchBooksAsync(string? search = null)
     {
         var books = _dbContext.Books.AsQueryable();
 

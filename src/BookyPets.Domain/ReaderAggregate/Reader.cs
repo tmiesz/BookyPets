@@ -49,7 +49,7 @@ public class Reader : AggregateRoot
             _roles.Add(role);
     }
 
-    public List<string> GetRoles() => _roles.ToList();
+    public List<string> GetRoles() => [.. _roles];
 
     public Result AcquirePet(Guid petId)
     {
@@ -64,6 +64,8 @@ public class Reader : AggregateRoot
         return Result.Success;
     }
 
+    public List<Guid> GetPets() => [.. _petIds];
+
     public Result<Guid> AcquireBook(Guid bookId)
     {
         if (_bookIds.Contains(bookId))
@@ -77,6 +79,8 @@ public class Reader : AggregateRoot
 
         return progressId;
     }
+
+    public List<Guid> GetBooks() => [.. _bookIds];
 
     // public Result AcquireQuest(Guid questId)
     // {
