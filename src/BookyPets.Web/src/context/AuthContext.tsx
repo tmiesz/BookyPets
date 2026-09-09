@@ -61,7 +61,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 title: "Error",
                 status: 0,
                 detail: "Something went wrong",
-                straceId: ""
+                traceId: ""
             });
 
             return false;
@@ -100,7 +100,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 title: "Error",
                 status: 0,
                 detail: "Something went wrong",
-                straceId: ""
+                traceId: ""
             });
 
             return false;
