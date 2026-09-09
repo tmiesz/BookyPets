@@ -23,7 +23,7 @@ export default function PetCard({ pet }: PetCardProps) {
                     +
                 </button>
                 <div className="pet-image">
-                    <img src={pet.iconUrl} />
+                    <img src={`http://localhost:5293/${pet.iconUrl}`} />
                 </div>
             </div>
         </div>
