@@ -1,15 +1,11 @@
 .book-card {
     display: flex;
     flex-direction: row;
+    text-align: center;
 }
 
 .book-image img {
     width: 100px;
     height: auto;
     display: block;
-}
-
-.book-info {
-    flex: 1;
-    padding-left: 1rem;
 }

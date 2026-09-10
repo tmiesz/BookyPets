@@ -8,24 +8,16 @@ interface BookCardProps {
 
 function BookCard({ book }: BookCardProps) {
 
-    function onAcquireClick() {
-        alert("clickd");
-    }
-
     return (
         <div className="book-card">
             <div className="book-info">
                 <h3>{book.title}</h3>
                 <p>{book.author}</p>
-                <p>{book.genre}</p>
-                <p>{book.pageCount} pages</p>
             </div>
             <div className="book-overlay">
-                <button className="acquire-button" onClick={onAcquireClick}>
-                    +
-                </button>
                 <div className="book-image">
                     <img src={`${BASE_URL}${book.iconUrl}`} />
+                    <p>{book.genre}</p>
                 </div>
             </div>
         </div>

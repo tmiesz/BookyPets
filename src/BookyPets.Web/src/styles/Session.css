@@ -1,0 +1,23 @@
+.session-container {
+    background-color: var(--color-neutral-100);
+    padding: var(--space-8);
+    margin: var(--space-8);
+    text-align: center;
+    border-radius: var(--radius-lg);
+    border-style: dotted;
+    border-color: red;
+}
+
+.session-layout {
+    display: flex;
+    justify-content: center;
+    align-items: space-between;
+    gap: var(--space-10);
+    border-style: dotted;
+    border-color: green;
+}
+
+.session-item {
+    border-style: dotted;
+    border-color: blue;
+}

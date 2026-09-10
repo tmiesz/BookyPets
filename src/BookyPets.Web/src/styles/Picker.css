@@ -1,0 +1,16 @@
+.picker-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(0 0 0 / 50%);
+}
+
+.picker {
+    width: 500px;
+    max-height: 80vh;
+    padding: var(--space-10);
+    background: var(--color-neutral-100);
+    border-radius: var(--radius-md);
+}
