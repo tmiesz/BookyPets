@@ -4,7 +4,7 @@ import { getBooks } from "../services/api";
 import type { Book } from "../types/Book";
 import "../styles/Books.css"
 
-function Home() {
+export default function Books() {
     const [searchQuery, setSearchQuery] = useState("");
     const [books, setBooks] = useState<Book[]>([]);
     const [error, setError] = useState<string | null>(null)
@@ -73,5 +73,3 @@ function Home() {
         </div>
     );
 }
-
-export default Home

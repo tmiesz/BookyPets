@@ -4,7 +4,7 @@ import type { Pet } from "../types/Pet";
 import PetCard from "../components/PetCard";
 import { getPets } from "../services/api";
 
-function Pets() {
+export default function Pets() {
     const [searchQuery, setSearchQuery] = useState("");
     const [pets, setPets] = useState<Pet[]>([]);
     const [error, setError] = useState<string | null>(null)
@@ -73,6 +73,4 @@ function Pets() {
         </div>
     );
 }
-
-export default Pets
 

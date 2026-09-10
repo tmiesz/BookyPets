@@ -4,7 +4,7 @@ import { getBooks } from "../data/booksmock";
 import { getPets } from "../data/petsmock";
 import "../styles/Home.css"
 
-function Home() {
+export default function Home() {
     const books = getBooks();
     const pets = getPets();
 
@@ -35,5 +35,3 @@ function Home() {
         </div>
     )
 }
-
-export default Home
