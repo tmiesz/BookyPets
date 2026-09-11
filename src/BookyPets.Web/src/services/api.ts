@@ -1,3 +1,4 @@
+import type { ApiError } from "../types/ApiError";
 import type { Book } from "../types/Book"
 import type { Pet } from "../types/Pet";
 import type { Progress } from "../types/Progress";
@@ -14,7 +15,7 @@ function authHeaders(): HeadersInit {
 }
 
 export const getReaderBooks = async (): Promise<Book[]> => {
-    const url = new URL(`${BASE_URL}/reader/books`);
+    const url = new URL(`${BASE_URL}/readers/books`);
     const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -23,16 +24,16 @@ export const getReaderBooks = async (): Promise<Book[]> => {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch books: ${response.status} ${response.statusText}`)
+        const error: ApiError = await response.json();
+        throw error;
     }
 
     const books: Book[] = await response.json();
     return books;
 }
 
-
 export const getReaderProgresses = async (): Promise<Progress[]> => {
-    const url = new URL(`${BASE_URL}/reader/progresses`);
+    const url = new URL(`${BASE_URL}/readers/progresses`);
     const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -41,7 +42,8 @@ export const getReaderProgresses = async (): Promise<Progress[]> => {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch progresses: ${response.status} ${response.statusText}`)
+        const error: ApiError = await response.json();
+        throw error;
     }
 
     const progresses: Progress[] = await response.json();
@@ -62,7 +64,8 @@ export const getBooks = async (search?: string): Promise<Book[]> => {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch books: ${response.status} ${response.statusText}`)
+        const error: ApiError = await response.json();
+        throw error;
     }
 
     const books: Book[] = await response.json();
@@ -83,7 +86,8 @@ export const getPets = async (search?: string): Promise<Pet[]> => {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch pets: ${response.status} ${response.statusText}`)
+        const error: ApiError = await response.json();
+        throw error;
     }
 
     const pets: Pet[] = await response.json();
