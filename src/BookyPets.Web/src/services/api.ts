@@ -1,5 +1,6 @@
 import type { Book } from "../types/Book"
 import type { Pet } from "../types/Pet";
+import type { Progress } from "../types/Progress";
 
 export const BASE_URL = "http://localhost:5293"
 
@@ -27,6 +28,24 @@ export const getReaderBooks = async (): Promise<Book[]> => {
 
     const books: Book[] = await response.json();
     return books;
+}
+
+
+export const getReaderProgresses = async (): Promise<Progress[]> => {
+    const url = new URL(`${BASE_URL}/reader/progresses`);
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            ...authHeaders(),
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch progresses: ${response.status} ${response.statusText}`)
+    }
+
+    const progresses: Progress[] = await response.json();
+    return progresses;
 }
 
 export const getBooks = async (search?: string): Promise<Book[]> => {

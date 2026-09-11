@@ -93,6 +93,8 @@ public class Reader : AggregateRoot
     //     _questIds.Add(questId);
     //     return Result.Success;
     // }
+    
+    public List<Guid> GetProgresses() => [.. _progressIds];
 
     public Result ChangeAccountType(AccountType newAccountType)
     {

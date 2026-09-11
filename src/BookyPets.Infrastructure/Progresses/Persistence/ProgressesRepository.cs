@@ -1,17 +1,13 @@
 using BookyPets.Application.Common.Interfaces;
 using BookyPets.Domain.BookAggregate;
 using BookyPets.Infrastructure.Common.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookyPets.Infrastructure.Progresses.Persistence;
 
-public class ProgressesRepository : IProgressesRepository
+public class ProgressesRepository(BookyPetsDbContext dbcontext) : IProgressesRepository
 {
-    private readonly BookyPetsDbContext _dbContext;
-
-    public ProgressesRepository(BookyPetsDbContext dbcontext)
-    {
-        _dbContext = dbcontext;
-    }
+    private readonly BookyPetsDbContext _dbContext = dbcontext;
 
     public async Task AddProgressAsync(Progress progress)
     {
@@ -21,6 +17,13 @@ public class ProgressesRepository : IProgressesRepository
     public async Task<Progress?> GetProgressAsync(Guid progressId)
     {
         return await _dbContext.Progresses.FindAsync(progressId);
+    }
+
+    public async Task<List<Progress>> GetProgressesAsync(List<Guid> progressIds)
+    {
+        return await _dbContext.Progresses
+            .Where(p => progressIds.Contains(p.Id))
+            .ToListAsync();
     }
 
     public Task UpdateProgressAsync(Progress progress)

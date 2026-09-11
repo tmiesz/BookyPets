@@ -33,7 +33,7 @@ export default function Session() {
                             <p>Choose a pet</p>
                             <button onClick={() => setPicker("pet")}>Choose</button>
                             <PetCard pet={pets[1]} />
-                            {picker === "pet" && <PetPicker onClose={() => setPicker(null)}/>}
+                            {picker === "pet" && <PetPicker onClose={() => setPicker(null)} />}
                         </div>
                     </div>
 

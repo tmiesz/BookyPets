@@ -6,6 +6,7 @@ using BookyPets.Application.Readers.Queries.GetProgress;
 using BookyPets.Application.Readers.Queries.GetReader;
 using BookyPets.Application.Readers.Queries.GetReaderBooks;
 using BookyPets.Application.Readers.Queries.GetReaderPets;
+using BookyPets.Application.Readers.Queries.GetReaderProgresses;
 using BookyPets.Contracts.Books;
 using BookyPets.Contracts.Pets;
 using BookyPets.Contracts.Readers;
@@ -119,5 +120,21 @@ public class ReadersController(IMediator _mediator) : ApiController
             progress => Ok(new ProgressResponse(progress.Id, progress.BookId, progress.CurrentPage, progress.TotalPages)),
             Problem
         );
+    }
+
+    [HttpGet("progresses")]
+    public async Task<IActionResult> GetProgresses()
+    {
+        var query = new GetReaderProgressesQuery();
+
+        var getProgresses = await _mediator.SendAsync(query);
+
+        return getProgresses.Match(
+            progresses => Ok(progresses.Select(progress => new ProgressResponse(
+                progress.Id,
+                progress.BookId,
+                progress.CurrentPage,
+                progress.TotalPages))),
+            Problem);
     }
 }
