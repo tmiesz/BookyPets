@@ -1,7 +1,6 @@
 .navbar {
     background-color: var(--color-neutral-100);
     border-radius: var(--radius-md);
-    font-size: var(--text-xl);
     padding: var(--space-4);
     display: flex;
     justify-content: space-between;
@@ -33,4 +32,13 @@
 .navbar-auth {
     display: flex;
     gap: var(--space-2);
+}
+
+.navbar-user {
+    padding: var(--space-2);
+}
+
+.navbar-greeting {
+    padding: var(--space-2);
+    font-size: var(--text-base);
 }
