@@ -3,7 +3,7 @@ import "../styles/NavBar.css"
 import { useAuth } from "../context/AuthContext";
 
 export default function NavBar() {
-    const { token, user, logout } = useAuth();
+    const { user, logout } = useAuth();
 
     return <nav className="navbar">
         <div className="navbar-brand">
@@ -11,7 +11,7 @@ export default function NavBar() {
         </div>
 
         <div className="navbar-links">
-            {token && (
+            {user && (
                 <>
                     <Link to="/session" className="navbar-link">Session</Link>
                     <Link to="/books" className="navbar-link">Books</Link>
@@ -19,7 +19,7 @@ export default function NavBar() {
                 </>
             )}
         </div>
-        {!token ?
+        {!user ?
             (
 
                 <div className="navbar-auth">
