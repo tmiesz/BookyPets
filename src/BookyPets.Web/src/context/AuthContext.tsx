@@ -1,4 +1,4 @@
-import { createContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 import type { User } from "../types/User";
 import { BASE_URL } from "../services/api.ts"
 import type { ApiError } from "../types/ApiError.ts";
@@ -154,4 +154,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     );
 }
 
-export { AuthContext };
+export function useAuth() {
+    const authContext = useContext(AuthContext);
+
+    if (!authContext) {
+        throw new Error("useAuth must be used within AuthProvider");
+    }
+
+    return authContext;
+}

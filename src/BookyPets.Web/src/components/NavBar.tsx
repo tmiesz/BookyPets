@@ -1,12 +1,9 @@
 import { Link } from "react-router-dom";
 import "../styles/NavBar.css"
-import { AuthContext } from "../context/AuthContext";
-import { useContext } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function NavBar() {
-    const authContext = useContext(AuthContext);
-    if (!authContext) throw new Error("Auth must be used within AuthProvider");
-    const { token, user, logout } = authContext;
+    const { token, user, logout } = useAuth();
 
     return <nav className="navbar">
         <div className="navbar-brand">

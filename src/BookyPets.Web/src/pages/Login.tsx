@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css"
 
@@ -12,9 +11,7 @@ interface AuthFormData {
 }
 
 export default function Login() {
-    const authContext = useContext(AuthContext);
-    if (!authContext) throw new Error("Auth must be used within AuthProvider");
-    const { login, error } = authContext;
+    const { login, error } = useAuth();
 
     const navigate = useNavigate()
 
