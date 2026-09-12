@@ -30,7 +30,6 @@ export default function Books() {
     const handleSearch = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (!searchQuery.trim()) return
         if (loading) return
 
         setLoading(true);
