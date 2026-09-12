@@ -42,22 +42,8 @@
     background-color: #f40612;
 }
 
-
-@media (max-width: 639px) {
-    .home {
-        padding: 1rem 0;
-    }
-
-    .search-form {
-        margin-bottom: 1rem;
-    }
-}
-
 .books-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
-    padding: 1rem;
-    width: 100%;
-    box-sizing: border-box;
 }
