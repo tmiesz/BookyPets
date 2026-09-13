@@ -1,0 +1,5 @@
+.acquire-book-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}

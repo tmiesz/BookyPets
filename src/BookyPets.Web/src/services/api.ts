@@ -94,3 +94,18 @@ export const getPets = async (search?: string): Promise<Pet[]> => {
     return pets;
 }
 
+export const acquireBook = async (bookId: string): Promise<void> => {
+    const url = new URL(`${BASE_URL}/readers/books/${bookId}/acquire`);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            ...authHeaders(),
+        },
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
+}

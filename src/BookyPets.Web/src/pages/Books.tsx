@@ -1,8 +1,8 @@
-import BookCard from "../components/BookCard"
 import { useState, useEffect, type SubmitEvent } from "react";
 import { getBooks } from "../services/api";
 import type { Book } from "../types/Book";
 import "../styles/Books.css"
+import AcquireBookCard from "../components/AcquireBookCard";
 
 export default function Books() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -65,7 +65,7 @@ export default function Books() {
             {loading ? <div className="loading">Loading...</div> :
                 <div className="books-grid">
                     {books.map((book) => (
-                        <BookCard book={book} key={book.id} />
+                        <AcquireBookCard book={book} key={book.id} />
                     ))}
                 </div>
             }
