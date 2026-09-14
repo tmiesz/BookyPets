@@ -44,9 +44,26 @@ function getValidToken(): string | null {
     }
 }
 
+function getUserFromToken(token: string): User | null {
+    try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+
+        return {
+            firstname: payload.firstname,
+            lastname: payload.lastname,
+            email: payload.email
+        };
+    } catch {
+        return null;
+    }
+}
+
 export default function AuthProvider({ children }: { children: ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(() => getValidToken())
+    const [user, setUser] = useState<User | null>(() => {
+        const t = getValidToken();
+        return t ? getUserFromToken(t) : null;
+    });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<ApiError | null>(null);
 
