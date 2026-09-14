@@ -1,22 +1,22 @@
-import type { Book } from "../types/Book";
 import "../styles/AcquireCard.css"
-import BookCard from "./BookCard";
-import { acquireBook } from "../services/api";
 import { useState } from "react";
 import type { ApiError } from "../types/ApiError";
+import PetCard from "./PetCard";
+import type { Pet } from "../types/Pet";
+import { acquirePet } from "../services/api";
 
-interface BookCardProps {
-    book: Book
+interface PetCardProps {
+    pet: Pet
 }
 
-export default function AcquireBookCard({ book }: BookCardProps) {
+export default function AcquirePetCard({ pet }: PetCardProps) {
     const [error, setError] = useState<ApiError | null>(null);
 
     const handleAcquire = async () => {
         setError(null);
 
         try {
-            await acquireBook(book.id);
+            await acquirePet(pet.id);
         } catch (error) {
             setError(error as ApiError);
         }
@@ -25,9 +25,9 @@ export default function AcquireBookCard({ book }: BookCardProps) {
     return (
         <div className="acquire-card">
             {error ? <p>{error.detail}</p> :
-                <button className="btn btn-secondary" onClick={handleAcquire}>Acquire Book</button>
+                <button className="btn btn-secondary" onClick={handleAcquire}>Acquire Pet</button>
             }
-            <BookCard book={book} />
+            <PetCard pet={pet} />
         </div>
     )
 }

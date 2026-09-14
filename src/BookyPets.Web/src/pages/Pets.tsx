@@ -1,8 +1,8 @@
 import { useState, useEffect, type SubmitEvent } from "react";
 import "../styles/Pets.css"
 import type { Pet } from "../types/Pet";
-import PetCard from "../components/PetCard";
 import { getPets } from "../services/api";
+import AcquirePetCard from "../components/AcquirePetCard";
 
 export default function Pets() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -66,7 +66,7 @@ export default function Pets() {
             {loading ? <div className="loading">Loading...</div> :
                 <div className="pets-grid">
                     {pets.map((pet) => (
-                        <PetCard pet={pet} key={pet.id} />
+                        <AcquirePetCard pet={pet} key={pet.id} />
                     ))}
                 </div>
             }

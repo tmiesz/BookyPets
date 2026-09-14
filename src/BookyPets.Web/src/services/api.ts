@@ -32,6 +32,24 @@ export const getReaderBooks = async (): Promise<Book[]> => {
     return books;
 }
 
+export const getReaderPets = async (): Promise<Pet[]> => {
+    const url = new URL(`${BASE_URL}/readers/pets`);
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            ...authHeaders(),
+        },
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
+
+    const pets: Pet[] = await response.json();
+    return pets;
+}
+
 export const getReaderProgresses = async (): Promise<Progress[]> => {
     const url = new URL(`${BASE_URL}/readers/progresses`);
     const response = await fetch(url, {
@@ -96,6 +114,22 @@ export const getPets = async (search?: string): Promise<Pet[]> => {
 
 export const acquireBook = async (bookId: string): Promise<void> => {
     const url = new URL(`${BASE_URL}/readers/books/${bookId}/acquire`);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            ...authHeaders(),
+        },
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
+}
+
+export const acquirePet = async (petId: string): Promise<void> => {
+    const url = new URL(`${BASE_URL}/readers/pets/${petId}/acquire`);
 
     const response = await fetch(url, {
         method: "POST",
