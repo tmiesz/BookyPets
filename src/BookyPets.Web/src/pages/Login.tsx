@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Login.css"
 
 interface AuthFormData {
-    firstname: string,
-    lastname: string,
     email: string,
     password: string
 }
@@ -19,7 +17,7 @@ export default function Login() {
         = useForm<AuthFormData>();
 
     async function onSubmit(data: AuthFormData) {
-        const success =  await login(data.email, data.password);
+        const success = await login(data.email, data.password);
         if (success) navigate("/")
     }
 
@@ -49,32 +47,14 @@ export default function Login() {
                                 <input className="form-input"
                                     id="password"
                                     type="password"
-                                    {...register('password', {
-                                        required: "Password is required",
-                                        minLength: { value: 8, message: "Password must be at least 8 characters" },
-                                        maxLength: { value: 100, message: "Password must be less than 100 characters" },
-                                        validate: {
-                                            uppercase: value =>
-                                                (value.match(/[A-Z]/g) || []).length >= 2 ||
-                                                "Password must contain atleast 2 uppercase letters.",
-                                            lowercase: value =>
-                                                (value.match(/[a-z]/g) || []).length >= 3 ||
-                                                "Password must contain atleast 3 lowercase letters.",
-                                            numbers: value =>
-                                                (value.match(/[0-9]/g) || []).length >= 2 ||
-                                                "Password must contain atleast 2 numbers.",
-                                            special: value =>
-                                                /[!@#$&*]/.test(value) ||
-                                                "Password must contain atleast 2 uppercase letters."
-                                        }
-                                    })}
+                                    {...register('password', { required: "Password is required" })}
                                 />
                             </label>
                             {errors.password && <span className="form-error">{errors.password.message}</span>}
                         </div>
 
                         <button className="btn btn-primary btn-large" type="submit">
-                            Sign Up
+                            Login
                         </button>
                     </form>
 
