@@ -10,25 +10,29 @@ export default function Home() {
 
     return (
         <div className="page">
-            <div className="home-hero">
-                <h1 className="home-title">Welcome to Booky Pets</h1>
-                <p className="home-subtitle">Every book deservse a companion</p>
+            <div className="home">
+                <h1 className="home__title">Welcome to Booky Pets</h1>
+                <p className="home__subtitle">Every book deservse a companion</p>
             </div>
 
             <div className="container">
-                <h2 className="page-title">Books</h2>
-                <div className="container-grid">
+                <h2 className="container__title">Books</h2>
+                <div className="container__grid">
                     {books.map((book) => (
-                        <BookCard book={book} key={book.id} />
+                        <div className="container__item">
+                            <BookCard book={book} key={book.id} />
+                        </div>
                     ))}
                 </div>
             </div>
 
             <div className="container">
-                <h2 className="page-title">Pets</h2>
-                <div className="container-grid">
+                <h2 className="container__title">Pets</h2>
+                <div className="container__grid">
                     {pets.map((pet) => (
-                        <PetCard pet={pet} key={pet.id} />
+                        <div className="container__item">
+                            <PetCard pet={pet} key={pet.id} />
+                        </div>
                     ))}
                 </div>
             </div>

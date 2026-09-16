@@ -1,3 +1,8 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background: var(--color-neutral-200);
     color: var(--color-neutral-900);
