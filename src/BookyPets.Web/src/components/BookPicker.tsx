@@ -7,15 +7,21 @@ import type { ApiError } from "../types/ApiError";
 
 type Props = {
     onClose: () => void;
+    onSelect: (book: Book) => void;
 };
 
-export default function BookPicker({ onClose }: Props) {
+export default function BookPicker({ onClose, onSelect }: Props) {
     const [books, setBooks] = useState<Book[]>([]);
     const [error, setError] = useState<ApiError | null>(null);
 
     useEffect(() => {
         getReaderBooks().then(setBooks).catch((error) => setError(error))
     }, []);
+
+    const handleSelect = (book: Book) => {
+        onSelect(book);
+        onClose();
+    }
 
     return (
         <div className="picker-overlay">
@@ -25,7 +31,9 @@ export default function BookPicker({ onClose }: Props) {
                 {error && <div className="error-message">{error.detail}</div>}
                 <div>
                     {books.map((b) => (
-                        <BookCard key={b.id} book={b} />
+                        <button key={b.id} className="picker-button" onClick={() => handleSelect(b)}>
+                            <BookCard key={b.id} book={b} />
+                        </button>
                     ))}
                 </div>
             </div>
