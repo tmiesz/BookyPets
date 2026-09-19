@@ -1,5 +1,6 @@
 import type { ApiError } from "../types/ApiError";
 import type { Book } from "../types/Book"
+import type { LibraryEntry } from "../types/LibraryEntry";
 import type { Pet } from "../types/Pet";
 import type { Progress } from "../types/Progress";
 
@@ -88,6 +89,28 @@ export const getBooks = async (search?: string): Promise<Book[]> => {
 
     const books: Book[] = await response.json();
     return books;
+}
+
+export const getLibrary = async (search?: string): Promise<LibraryEntry[]> => {
+    const url = new URL(`${BASE_URL}/readers/library`);
+    if (search?.trim()) {
+        url.searchParams.set("search", search.trim())
+    }
+
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            ...authHeaders(),
+        },
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
+
+    const library: LibraryEntry[] = await response.json();
+    return library;
 }
 
 export const getPets = async (search?: string): Promise<Pet[]> => {

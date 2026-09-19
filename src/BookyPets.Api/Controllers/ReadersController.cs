@@ -5,6 +5,7 @@ using BookyPets.Application.Readers.Commands.ChangeAccountType;
 using BookyPets.Application.Readers.Queries.GetProgress;
 using BookyPets.Application.Readers.Queries.GetReader;
 using BookyPets.Application.Readers.Queries.GetReaderBooks;
+using BookyPets.Application.Readers.Queries.GetReaderLibrary;
 using BookyPets.Application.Readers.Queries.GetReaderPets;
 using BookyPets.Application.Readers.Queries.GetReaderProgresses;
 using BookyPets.Contracts.Books;
@@ -135,6 +136,30 @@ public class ReadersController(IMediator _mediator) : ApiController
                 progress.BookId,
                 progress.CurrentPage,
                 progress.TotalPages))),
+            Problem);
+    }
+
+    [HttpGet("library")]
+    public async Task<IActionResult> GetLibrary()
+    {
+        var query = new GetReaderLibraryQuery();
+
+        var getLibraryResult = await _mediator.SendAsync(query);
+
+        return getLibraryResult.Match(
+            entries => Ok(entries.Select(entry => new ReaderLibraryEntryResponse(
+                new BookResponse(
+                    entry.Book.Id,
+                    entry.Book.Title,
+                    entry.Book.Author,
+                    DtoConverter.ToDto(entry.Book.Genre),
+                    IconResolver.Genre.Resolve(entry.Book.Genre),
+                    entry.Book.PageCount),
+                new ProgressResponse(
+                    entry.Progress.Id,
+                    entry.Progress.BookId,
+                    entry.Progress.CurrentPage,
+                    entry.Progress.TotalPages)))),
             Problem);
     }
 }

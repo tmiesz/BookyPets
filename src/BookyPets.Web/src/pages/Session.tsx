@@ -6,7 +6,7 @@ import BookPicker from "../components/BookPicker";
 import PetPicker from "../components/PetPicker";
 import type { Pet } from "../types/Pet";
 import type { Book } from "../types/Book";
-import { getBooks, getPets } from "../services/api";
+import { getLibrary, getPets } from "../services/api";
 import type { ApiError } from "../types/ApiError";
 
 export default function Session() {
@@ -16,7 +16,7 @@ export default function Session() {
     const [error, setError] = useState<ApiError | null>(null);
 
     useEffect(() => {
-        getBooks()
+        getLibrary()
             .then((books) => setSelectedBook(books[0] ?? null))
             .catch((error) => setError(error));
 
