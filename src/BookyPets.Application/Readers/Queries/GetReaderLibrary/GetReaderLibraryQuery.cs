@@ -1,4 +1,3 @@
-using BookyPets.Application.Common.Models;
 using BookyPets.Shared.Mediator.Abstractions;
 using BookyPets.Shared.Result;
 
