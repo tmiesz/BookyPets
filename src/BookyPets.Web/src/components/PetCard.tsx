@@ -17,6 +17,7 @@ export default function PetCard({ pet }: PetCardProps) {
 
             <div className="pet__info">
                 <h3>{pet.name}</h3>
+                <p>Level {pet.level}</p>
                 {pet.favouriteGenre && <p>Loves {pet.favouriteGenre}</p>}
             </div>
 

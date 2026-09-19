@@ -4,5 +4,7 @@ export interface Pet {
     species: string,
     iconUrl: string,
     favouriteGenre: string | null,
-    level: number
+    level: number,
+    experience: number,
+    experienceForNextLevel: number
 }

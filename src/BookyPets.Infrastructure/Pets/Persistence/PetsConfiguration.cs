@@ -24,7 +24,7 @@ public class PetsConfiguration : IEntityTypeConfiguration<Pet>
                 species => species.Name,
                 name => Species.FromName(name)!);
 
-        builder.Property("_experience").HasColumnName("Experience");
+        builder.Property(p => p.Experience);
 
         builder.Ignore("_domainEvents");
     }

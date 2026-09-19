@@ -9,8 +9,9 @@ public class Pet : AggregateRoot
     public string Name { get; private set; }
     public Species Species { get; private set; }
     public Genre? FavouriteGenre { get; private set; }
-    private int _experience;
     public int Level { get; private set; }
+    public int Experience { get; private set; }
+    public int ExperienceForNextLevel => Level * 100;
 
     private Pet()
     {
@@ -30,11 +31,11 @@ public class Pet : AggregateRoot
         if (experience < 0)
             return PetErrors.InvalidExperience;
 
-        _experience += experience;
+        Experience += experience;
 
-        while (_experience >= ExperienceForNextLevel())
+        while (Experience >= ExperienceForNextLevel)
         {
-            _experience -= ExperienceForNextLevel();
+            Experience -= ExperienceForNextLevel;
             Level++;
         }
 
@@ -50,6 +51,4 @@ public class Pet : AggregateRoot
 
         return GainExperience(exp);
     }
-
-    private int ExperienceForNextLevel() => Level * 100;
 }

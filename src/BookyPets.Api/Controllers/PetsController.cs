@@ -51,7 +51,9 @@ public class PetsController(IMediator _mediator) : ApiController
                 DtoConverter.ToDto(pet.Species),
                 IconResolver.Species.Resolve(species),
                 pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
-                pet.Level)),
+                pet.Level,
+                pet.Experience,
+                pet.ExperienceForNextLevel)),
             Problem
         );
     }
@@ -70,7 +72,9 @@ public class PetsController(IMediator _mediator) : ApiController
                 DtoConverter.ToDto(pet.Species),
                 IconResolver.Species.Resolve(pet.Species),
                 pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
-                pet.Level)),
+                pet.Level,
+                pet.Experience,
+                pet.ExperienceForNextLevel)),
             Problem
         );
     }
@@ -89,7 +93,9 @@ public class PetsController(IMediator _mediator) : ApiController
                 DtoConverter.ToDto(pet.Species),
                 IconResolver.Species.Resolve(pet.Species),
                 pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
-                pet.Level))),
+                pet.Level,
+                pet.Experience,
+                pet.ExperienceForNextLevel))),
             Problem
         );
     }
