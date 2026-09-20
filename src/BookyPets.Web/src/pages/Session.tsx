@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
-import BookCard from "../components/BookCard";
 import PetCard from "../components/PetCard";
 import "../styles/Session.css";
-import BookPicker from "../components/BookPicker";
 import PetPicker from "../components/PetPicker";
 import type { Pet } from "../types/Pet";
-import type { Book } from "../types/Book";
 import { getLibrary, getPets } from "../services/api";
 import type { ApiError } from "../types/ApiError";
+import type { LibraryEntry } from "../types/LibraryEntry";
+import LibraryEntryPicker from "../components/LibraryEntryPicker";
+import LibraryEntryCard from "../components/LibraryEntryCard";
 
 export default function Session() {
     const [picker, setPicker] = useState<"book" | "pet" | null>(null);
-    const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+    const [selectedEntry, setSelectedEntry] = useState<LibraryEntry | null>(null);
     const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
     const [error, setError] = useState<ApiError | null>(null);
 
     useEffect(() => {
         getLibrary()
-            .then((books) => setSelectedBook(books[0] ?? null))
+            .then((books) => setSelectedEntry(books[0] ?? null))
             .catch((error) => setError(error));
 
         getPets()
@@ -37,12 +37,12 @@ export default function Session() {
                         <div className="session-item">
                             <p>Choose a book</p>
                             <button onClick={() => setPicker("book")}>Choose</button>
-                            {selectedBook && <BookCard book={selectedBook} />}
-                            {picker === "book" && <BookPicker onClose={() => setPicker(null)} onSelect={setSelectedBook} />}
+                            {selectedEntry && <LibraryEntryCard entry={selectedEntry} />}
+                            {picker === "book" && <LibraryEntryPicker onClose={() => setPicker(null)} onSelect={setSelectedEntry} />}
                         </div>
 
                         <div className="session-item">
-                            <button className="start-session-button" disabled={!selectedBook} onClick={() => { /* todo */ }}>Start a session</button>
+                            <button className="start-session-button" disabled={!selectedEntry} onClick={() => { /* todo */ }}>Start a session</button>
                         </div>
 
                         <div className="session-item">
