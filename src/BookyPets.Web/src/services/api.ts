@@ -3,6 +3,7 @@ import type { Book } from "../types/Book"
 import type { LibraryEntry } from "../types/LibraryEntry";
 import type { Pet } from "../types/Pet";
 import type { Progress } from "../types/Progress";
+import type { Session } from "../types/Session";
 
 export const BASE_URL = "http://localhost:5293"
 
@@ -165,4 +166,64 @@ export const acquirePet = async (petId: string): Promise<void> => {
         const error: ApiError = await response.json();
         throw error;
     }
+}
+
+export const startSession = async (readerId: string, progressId: string, petId: string | null): Promise<Session> => {
+    const url = new URL(`${BASE_URL}/sessions/start`);
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...authHeaders(),
+        },
+        body: JSON.stringify({ readerId, progressId, petId }),
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
+
+    const session: Session = await response.json();
+    return session;
+}
+
+export const completeSession = async (sessionId: string, pagesRead: number): Promise<Session> => {
+    const url = new URL(`${BASE_URL}/sessions/complete`);
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...authHeaders(),
+        },
+        body: JSON.stringify({ sessionId, pagesRead }),
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
+
+    const session: Session = await response.json();
+    return session;
+}
+
+export const abandonSession = async (sessionId: string): Promise<Session> => {
+    const url = new URL(`${BASE_URL}/sessions/abandon`);
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...authHeaders(),
+        },
+        body: JSON.stringify({ sessionId }),
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
+
+    const session: Session = await response.json();
+    return session;
 }
