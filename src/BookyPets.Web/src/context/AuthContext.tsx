@@ -36,7 +36,7 @@ function getValidToken(): string | null {
             return null;
         }
 
-        return null;
+        return token;
     }
     catch {
         localStorage.removeItem("token");
@@ -49,6 +49,7 @@ function getUserFromToken(token: string): User | null {
         const payload = JSON.parse(atob(token.split(".")[1]));
 
         return {
+            id: payload.id,
             firstname: payload.firstname,
             lastname: payload.lastname,
             email: payload.email
@@ -152,6 +153,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         setToken(data.token);
         localStorage.setItem("token", data.token);
         setUser({
+            id: data.id,
             firstname: data.firstName,
             lastname: data.lastName,
             email: data.email
