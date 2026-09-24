@@ -7,4 +7,5 @@ public interface ISessionsRepository
     Task AddSessionAsync(Session session);
     Task<Session?> GetSessionAsync(Guid sessionId);
     Task UpdateSessionAsync(Session session);
+    Task<Session?> GetActiveSession(Guid readerId);
 }

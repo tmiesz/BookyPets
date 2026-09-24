@@ -13,4 +13,9 @@ public static class SessionErrors
         ErrorType.Failure,
         "Session.InvalidPagesRead",
         "Pages read cannot be negative.");
+
+    public static readonly Error SessionAlreadyActive = new(
+        ErrorType.Conflict,
+        "Session.AlreadyActive",
+        "You already have an active session.");
 }
