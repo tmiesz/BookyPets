@@ -74,6 +74,9 @@ namespace BookyPets.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Experience")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("FavouriteGenre")
                         .HasColumnType("TEXT");
 
@@ -87,10 +90,6 @@ namespace BookyPets.Infrastructure.Migrations
                     b.Property<string>("Species")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("_experience")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("Experience");
 
                     b.HasKey("Id");
 
@@ -171,6 +170,10 @@ namespace BookyPets.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("Genre");
+
+                    b.Property<DateTime>("_lastHeartbeatAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("LastHeartbeatAt");
 
                     b.Property<Guid?>("_petId")
                         .HasColumnType("TEXT")
