@@ -7,12 +7,15 @@ namespace BookyPets.Domain.SessionAggregate;
 
 public class Session : AggregateRoot
 {
+    public static readonly TimeSpan StalenessThreshold = TimeSpan.FromMinutes(5);
+
     private readonly Guid _readerId;
     private readonly Guid _progressId;
     private readonly Guid _bookId;
     private readonly Genre _genre;
     private readonly Guid? _petId;
     private readonly DateTime _startTime;
+    private DateTime _lastHeartbeatAt;
 
     public SessionStatus Status { get; private set; }
     public int PagesRead { get; private set; }
@@ -39,8 +42,21 @@ public class Session : AggregateRoot
         _genre = genre;
         _petId = petId;
         _startTime = startTime;
+        _lastHeartbeatAt = startTime;
         Status = SessionStatus.Active;
     }
+
+    public Result Heartbeat(DateTime now)
+    {
+        if (Status != SessionStatus.Active)
+            return SessionErrors.SessionNotActive;
+
+        _lastHeartbeatAt = now;
+
+        return Result.Success;
+    }
+
+    public bool IsStale(DateTime now) => now - _lastHeartbeatAt > StalenessThreshold;
 
     public Result Complete(int pagesRead, DateTime now)
     {
