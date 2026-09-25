@@ -2,6 +2,7 @@ using BookyPets.Api.Common;
 using BookyPets.Application.Common.Authorization;
 using BookyPets.Application.Sessions.Commands.AbandonSession;
 using BookyPets.Application.Sessions.Commands.CompleteSession;
+using BookyPets.Application.Sessions.Commands.HeartbeatSession;
 using BookyPets.Application.Sessions.Commands.StartSession;
 using BookyPets.Contracts.Sessions;
 using BookyPets.Shared.Mediator.Abstractions;
@@ -47,5 +48,17 @@ public class SessionsController(IMediator _mediator) : ApiController
         return completeSessionResult.Match(
             session => Ok(new SessionResponse(session.Id, DtoConverter.ToDto(session.Status), session.PagesRead, session.EndTime)),
             Problem);
+    }
+
+    [HttpPost("heartbeat")]
+    public async Task<IActionResult> HeartbeatSession()
+    {
+        var command = new HeartbeatSessionCommand();
+
+        var heartbeatSessionResult = await _mediator.SendAsync(command);
+
+        return heartbeatSessionResult.Match(
+                NoContent,
+                Problem);
     }
 }
