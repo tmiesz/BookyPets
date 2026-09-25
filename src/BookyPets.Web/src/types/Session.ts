@@ -4,3 +4,11 @@ export interface Session {
     pagesRead: number,
     endTime: string | null
 }
+
+export interface ActiveSession {
+    id: string,
+    progressId: string,
+    petId: string | null,
+    startTime: string,
+    isStale: boolean
+}
