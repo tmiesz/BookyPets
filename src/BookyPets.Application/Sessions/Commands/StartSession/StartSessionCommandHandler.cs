@@ -26,7 +26,7 @@ public class StartSessionCommandHandler(
     {
         var currentReader = _currentReaderProvider.GetCurrentReader();
 
-        var activeSession = await _sessionsRepository.GetActiveSession(currentReader.Id);
+        var activeSession = await _sessionsRepository.GetActiveSessionAsync(currentReader.Id);
 
         if (activeSession is not null)
             return SessionErrors.SessionAlreadyActive;
