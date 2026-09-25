@@ -3,7 +3,7 @@ import type { Book } from "../types/Book"
 import type { LibraryEntry } from "../types/LibraryEntry";
 import type { Pet } from "../types/Pet";
 import type { Progress } from "../types/Progress";
-import type { Session } from "../types/Session";
+import type { ActiveSession, Session } from "../types/Session";
 
 export const BASE_URL = "http://localhost:5293"
 
@@ -226,4 +226,37 @@ export const abandonSession = async (sessionId: string): Promise<Session> => {
 
     const session: Session = await response.json();
     return session;
+}
+
+export const getActiveSession = async (): Promise<ActiveSession | null> => {
+    const url = new URL(`${BASE_URL}/sessions/active`);
+    const response = await fetch(url, {
+        method: "GET",
+        headers: {
+            ...authHeaders(),
+        },
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
+
+    const session: ActiveSession = await response.json();
+    return session;
+}
+
+export const heartbeatSession = async (): Promise<void> => {
+    const url = new URL(`${BASE_URL}/sessions/heartbeat`);
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            ...authHeaders(),
+        },
+    });
+
+    if (!response.ok) {
+        const error: ApiError = await response.json();
+        throw error;
+    }
 }
