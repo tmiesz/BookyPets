@@ -1,4 +1,5 @@
 using BookyPets.Application.Common.Interfaces;
+using BookyPets.Application.Common.Models;
 using BookyPets.Domain.SessionAggregate;
 using BookyPets.Infrastructure.Common.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,25 @@ public class SessionsRepository(BookyPetsDbContext dbcontext) : ISessionsReposit
         await _dbContext.Sessions.AddAsync(session);
     }
 
-    public async Task<Session?> GetActiveSession(Guid readerId)
+    public async Task<Session?> GetActiveSessionAsync(Guid readerId)
     {
         return await _dbContext.Sessions.FirstOrDefaultAsync(s =>
                 EF.Property<Guid>(s, "_readerId") == readerId &&
                     s.Status == SessionStatus.Active);
+    }
+
+    public async Task<ActiveSessionInfo?> GetActiveSessionInfoAsync(Guid readerId)
+    {
+        return await _dbContext.Sessions
+            .Where(s => EF.Property<Guid>(s, "_readerId") == readerId && s.Status == SessionStatus.Active)
+            .Select(s => new ActiveSessionInfo(
+                        s.Id,
+                        EF.Property<Guid>(s, "_progressId"),
+                        EF.Property<Guid?>(s, "_petId"),
+                        EF.Property<DateTime>(s, "_startTime"),
+                        EF.Property<DateTime>(s, "_lastHeartbeatAt")))
+            .FirstOrDefaultAsync();
+
     }
 
     public async Task<Session?> GetSessionAsync(Guid sessionId)
