@@ -39,6 +39,10 @@ public class SessionsConfiguration : IEntityTypeConfiguration<Session>
             .HasColumnName("StartTime")
             .IsRequired();
 
+        builder.Property<DateTime>("_lastHeartbeatAt")
+            .HasColumnName("LastHeartbeatAt")
+            .IsRequired();
+
         builder.Property(s => s.Status)
             .HasConversion(
                 status => status.Name,
