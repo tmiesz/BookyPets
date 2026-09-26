@@ -4,6 +4,7 @@ using BookyPets.Application.Sessions.Commands.AbandonSession;
 using BookyPets.Application.Sessions.Commands.CompleteSession;
 using BookyPets.Application.Sessions.Commands.HeartbeatSession;
 using BookyPets.Application.Sessions.Commands.StartSession;
+using BookyPets.Application.Sessions.Queries.GetActiveSession;
 using BookyPets.Contracts.Sessions;
 using BookyPets.Shared.Mediator.Abstractions;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,21 @@ public class SessionsController(IMediator _mediator) : ApiController
             Problem);
     }
 
+    [HttpGet("active")]
+    public async Task<IActionResult> GetActiveSession()
+    {
+        var query = new GetActiveSessionQuery();
+
+        var getActiveSessionQueryResult = await _mediator.SendAsync(query);
+
+        if (getActiveSessionQueryResult.IsSuccess && getActiveSessionQueryResult.Value is null)
+            return NoContent();
+
+        return getActiveSessionQueryResult.Match(
+            session => Ok(new ActiveSessionResponse(session!.Id, session.ProgressId, session.PetId, session.StartTime, session.IsStale)),
+            Problem);
+    }
+
     [HttpPost("heartbeat")]
     public async Task<IActionResult> HeartbeatSession()
     {
@@ -58,7 +74,7 @@ public class SessionsController(IMediator _mediator) : ApiController
         var heartbeatSessionResult = await _mediator.SendAsync(command);
 
         return heartbeatSessionResult.Match(
-                NoContent,
-                Problem);
+            NoContent,
+            Problem);
     }
 }
