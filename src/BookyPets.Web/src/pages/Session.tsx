@@ -75,7 +75,6 @@ export default function Session() {
         return () => clearInterval(interval);
     }, [session?.status]);
 
-
     useEffect(() => {
         if (session?.status !== "Active") return;
 
@@ -161,7 +160,7 @@ export default function Session() {
 
     function resetSession() {
         setSession(null);
-        startedAtRef.current = 0;
+        startedAtRef.current = null;
         setElapsedSeconds(0);
         setPagesReadInput("");
     }
@@ -223,19 +222,33 @@ export default function Session() {
                     )}
 
                     <div className="session-layout">
-                        <div className="session-item">
-                            <p>Choose a book</p>
-                            <button onClick={() => setPicker("book")} disabled={!!pendingSession}>Choose</button>
-                            {selectedEntry && <LibraryEntryCard entry={selectedEntry} />}
-                            {picker === "book" && <LibraryEntryPicker onClose={() => setPicker(null)} onSelect={setSelectedEntry} />}
-                        </div>
+                        {!isActive && (
+                            <>
+                                <div className="session-item">
+                                    <p>Choose a book</p>
+                                    <button onClick={() => setPicker("book")} disabled={!!pendingSession}>Choose</button>
+                                    {selectedEntry && <LibraryEntryCard entry={selectedEntry} />}
+                                    {picker === "book" && <LibraryEntryPicker onClose={() => setPicker(null)} onSelect={setSelectedEntry} />}
+                                </div>
 
-                        <div className="session-item">
-                            <button className="start-session-button" disabled={!selectedEntry || submitting || !!pendingSession} onClick={handleStart}>Start a session</button>
-                        </div>
+                                <div className="session-item">
+                                    <button className="start-session-button" disabled={!selectedEntry || submitting || !!pendingSession} onClick={handleStart}>Start a session</button>
+                                </div>
+
+                                <div className="session-item">
+                                    <p>Choose a pet</p>
+                                    <button onClick={() => setPicker("pet")} disabled={!!pendingSession}>Choose</button>
+                                    {selectedPet && <PetCard pet={selectedPet} />}
+                                    {picker === "pet" && <PetPicker onClose={() => setPicker(null)} onSelect={setSelectedPet} />}
+                                </div>
+                            </>
+                        )}
 
                         {isActive && (
                             <div className="session-active-controls">
+                                {selectedEntry && <LibraryEntryCard entry={selectedEntry} />}
+                                {selectedPet && <PetCard pet={selectedPet} />}
+
                                 <span className="session-clock">{formatElapsed(elapsedSeconds)}</span>
 
                                 <div className="session-pages-input">
@@ -252,14 +265,6 @@ export default function Session() {
                                 </button>
                             </div>
                         )}
-
-
-                        <div className="session-item">
-                            <p>Choose a pet</p>
-                            <button onClick={() => setPicker("pet")} disabled={!!pendingSession}>Choose</button>
-                            {selectedPet && <PetCard pet={selectedPet} />}
-                            {picker === "pet" && <PetPicker onClose={() => setPicker(null)} onSelect={setSelectedPet} />}
-                        </div>
                     </div>
 
                 </div>
