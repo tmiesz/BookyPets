@@ -18,6 +18,7 @@
           dotnet-ef
           sqlite
           nodejs_22
+          docker
         ];
 
         shellHook = ''
