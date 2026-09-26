@@ -3,13 +3,15 @@ import PetCard from "../components/PetCard";
 import "../styles/Session.css";
 import PetPicker from "../components/PetPicker";
 import type { Pet } from "../types/Pet";
-import { completeSession, getLibrary, getPets, startSession } from "../services/api";
+import { abandonSession, completeSession, getActiveSession, getLibrary, getPets, heartbeatSession, startSession } from "../services/api";
 import type { ApiError } from "../types/ApiError";
 import type { LibraryEntry } from "../types/LibraryEntry";
-import type { Session } from "../types/Session";
+import type { ActiveSession, Session } from "../types/Session";
 import LibraryEntryPicker from "../components/LibraryEntryPicker";
 import LibraryEntryCard from "../components/LibraryEntryCard";
 import { useAuth } from "../context/AuthContext";
+
+const HEARTBEAT_INTERVAL_MS = 60_000;
 
 function formatElapsed(totalSeconds: number): string {
     const seconds = totalSeconds % 60;
@@ -39,12 +41,27 @@ export default function Session() {
     const [pagesReadInput, setPagesReadInput] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
+    const [pendingSession, setPendingSession] = useState<{
+        info: ActiveSession;
+        entry: LibraryEntry | null;
+        pet: Pet | null;
+    } | null>(null);
+
     const startedAtRef = useRef<number | null>(null);
 
     useEffect(() => {
-        refreshLibrary();
-        getPets()
-            .then((pets) => setSelectedPet(pets[0] ?? null))
+        Promise.all([refreshLibrary(), getPets(), getActiveSession()])
+            .then(([entries, pets, activeSession]) => {
+                if (!entries || !pets) return;
+
+                if (activeSession) {
+                    const matchedEntry = entries.find((e) => e.progress.id === activeSession.progressId) ?? null;
+                    const matchedPet = pets.find((p) => p.id === activeSession.petId) ?? null;
+                    setPendingSession({ info: activeSession, entry: matchedEntry, pet: matchedPet });
+                } else {
+                    setSelectedPet(pets[0] ?? null);
+                }
+            })
             .catch((error) => setError(error));
     }, []);
 
@@ -54,6 +71,17 @@ export default function Session() {
         const interval = setInterval(() => {
             setElapsedSeconds(Math.floor((Date.now() - startedAtRef.current!) / 1000));
         }, 1000);
+
+        return () => clearInterval(interval);
+    }, [session?.status]);
+
+
+    useEffect(() => {
+        if (session?.status !== "Active") return;
+
+        const interval = setInterval(() => {
+            heartbeatSession().catch((error) => setError(error));
+        }, HEARTBEAT_INTERVAL_MS);
 
         return () => clearInterval(interval);
     }, [session?.status]);
@@ -120,10 +148,8 @@ export default function Session() {
         setSubmitting(true);
 
         try {
-            setSession(null);
-            startedAtRef.current = null;
-            setElapsedSeconds(0);
-            setPagesReadInput("");
+            await abandonSession(session.id);
+            resetSession();
         }
         catch (err) {
             setError(err as ApiError);
@@ -140,6 +166,40 @@ export default function Session() {
         setPagesReadInput("");
     }
 
+    async function handleResumePending() {
+        if (!pendingSession) return;
+
+        const { info, entry, pet } = pendingSession;
+
+        setSelectedEntry(entry);
+        setSelectedPet(pet);
+        startedAtRef.current = new Date(info.startTime).getTime();
+        setElapsedSeconds(Math.floor((Date.now() - startedAtRef.current) / 1000));
+        setSession({ id: info.id, status: "Active", pagesRead: 0, endTime: null });
+        setPendingSession(null);
+    }
+
+    async function handleDiscardPending() {
+        if (!pendingSession) return;
+
+        setError(null);
+        setSubmitting(true);
+
+        try {
+            await abandonSession(pendingSession.info.id);
+            setPendingSession(null);
+
+            const pets = await getPets();
+            setSelectedPet(pets[0] ?? null);
+        }
+        catch (err) {
+            setError(err as ApiError);
+        }
+        finally {
+            setSubmitting(false);
+        }
+    }
+
     const isActive = session?.status === "Active";
 
     return (
@@ -150,16 +210,28 @@ export default function Session() {
 
                     {error && <div className="error-message">{error.detail}</div>}
 
+                    {pendingSession && (
+                        <div className="session-resume-prompt">
+                            <p>
+                                {pendingSession.info.isStale
+                                    ? `You have an old reading session${pendingSession.entry ? ` for "${pendingSession.entry.book.title}"` : ""}. Resume or discard it?`
+                                    : `You have an active reading session${pendingSession.entry ? ` for "${pendingSession.entry.book.title}"` : ""}. Resume?`}
+                            </p>
+                            <button onClick={handleResumePending} disabled={submitting}>Resume</button>
+                            <button onClick={handleDiscardPending} disabled={submitting}>Discard</button>
+                        </div>
+                    )}
+
                     <div className="session-layout">
                         <div className="session-item">
                             <p>Choose a book</p>
-                            <button onClick={() => setPicker("book")}>Choose</button>
+                            <button onClick={() => setPicker("book")} disabled={!!pendingSession}>Choose</button>
                             {selectedEntry && <LibraryEntryCard entry={selectedEntry} />}
                             {picker === "book" && <LibraryEntryPicker onClose={() => setPicker(null)} onSelect={setSelectedEntry} />}
                         </div>
 
                         <div className="session-item">
-                            <button className="start-session-button" disabled={!selectedEntry || submitting} onClick={handleStart}>Start a session</button>
+                            <button className="start-session-button" disabled={!selectedEntry || submitting || !!pendingSession} onClick={handleStart}>Start a session</button>
                         </div>
 
                         {isActive && (
@@ -184,7 +256,7 @@ export default function Session() {
 
                         <div className="session-item">
                             <p>Choose a pet</p>
-                            <button onClick={() => setPicker("pet")}>Choose</button>
+                            <button onClick={() => setPicker("pet")} disabled={!!pendingSession}>Choose</button>
                             {selectedPet && <PetCard pet={selectedPet} />}
                             {picker === "pet" && <PetPicker onClose={() => setPicker(null)} onSelect={setSelectedPet} />}
                         </div>
