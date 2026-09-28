@@ -58,9 +58,9 @@ public class BooksController(IMediator _mediator) : ApiController
     }
 
     [HttpGet("")]
-    public async Task<IActionResult> SearchBooks([FromQuery] string? search)
+    public async Task<IActionResult> SearchBooks([FromQuery] string? search, [FromQuery] int? limit)
     {
-        var query = new SearchBooksQuery(search);
+        var query = new SearchBooksQuery(search, limit);
 
         var getBooksResult = await _mediator.SendAsync(query);
 
