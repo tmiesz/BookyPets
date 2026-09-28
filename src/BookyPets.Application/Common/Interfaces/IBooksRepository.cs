@@ -7,5 +7,5 @@ public interface IBooksRepository
     Task AddBookAsync(Book book);
     Task<Book?> GetBookAsync(Guid bookId);
     Task<List<Book>> GetBooksAsync(List<Guid> bookIds);
-    Task<List<Book>> SearchBooksAsync(string? search = null);
+    Task<List<Book>> SearchBooksAsync(string? search = null, int? limit = null);
 }

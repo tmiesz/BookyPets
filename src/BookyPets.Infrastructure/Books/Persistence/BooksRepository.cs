@@ -26,7 +26,7 @@ public class BooksRepository(BookyPetsDbContext dbContext) : IBooksRepository
             .ToListAsync();
     }
 
-    public async Task<List<Book>> SearchBooksAsync(string? search = null)
+    public async Task<List<Book>> SearchBooksAsync(string? search = null, int? limit = null)
     {
         var books = _dbContext.Books.AsQueryable();
 
@@ -42,6 +42,14 @@ public class BooksRepository(BookyPetsDbContext dbContext) : IBooksRepository
                     EF.Functions.Like(book.Title, $"%{searchTerm}%") ||
                     EF.Functions.Like(book.Author, $"%{searchTerm}%") ||
                     (book.Genre != null && matchingGenres.Contains(book.Genre)));
+        }
+
+        if (limit.HasValue)
+        {
+            books = books
+                    .OrderBy(b => b.Title)
+                    .ThenBy(b => b.Id)
+                    .Take(limit.Value);
         }
 
         return await books.ToListAsync();
