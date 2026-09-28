@@ -23,6 +23,12 @@ a {
     border-radius: var(--radius-sm);
     font-size: var(--text-base);
     transition: background-color 0.2s;
+    color: var(--color-neutral-100);
+}
+
+.btn:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-md);
 }
 
 .error-message {
