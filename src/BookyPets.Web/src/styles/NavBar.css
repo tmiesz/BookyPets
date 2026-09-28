@@ -51,18 +51,15 @@
 
 .navbar__logout {
     margin: var(--space-2);
-    color: var(--color-neutral-100);
     background-color: var(--color-secondary-400);
 }
 
 .navbar__signup {
     margin: var(--space-2);
-    color: var(--color-neutral-100);
     background-color: var(--color-primary-400);
 }
 
 .navbar__login {
     margin: var(--space-2);
-    color: var(--color-neutral-100);
     background-color: var(--color-secondary-400);
 }
