@@ -3,42 +3,66 @@
     border-radius: var(--radius-md);
     padding: var(--space-4);
     display: flex;
-    justify-content: space-between;
     align-items: center;
     box-shadow: var(--shadow-md);
 }
 
-.navbar-brand {
+.navbar__brand {
+    flex: 1;
     font-size: var(--text-2xl);
     font-weight: bold;
 }
 
-.navbar-links {
+.navbar__links {
     display: flex;
+    flex: 0 0 auto;
     gap: var(--space-8);
 }
 
-.navbar-link {
+.navbar__link {
     font-size: var(--text-base);
     padding: var(--space-2);
     border-radius: var(--radius-sm);
     transition: background-color 0.2s;
 }
 
-.navbar-link:hover {
+.navbar__link:hover {
     background-color: var(--color-neutral-200);
 }
 
-.navbar-auth {
+.navbar__auth {
     display: flex;
-    gap: var(--space-2);
+    justify-content: flex-end;
+    flex: 1;
 }
 
-.navbar-user {
-    padding: var(--space-2);
-}
-
-.navbar-greeting {
-    padding: var(--space-2);
+.navbar__user {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
     font-size: var(--text-base);
+}
+
+.navbar__greeting {
+    white-space: wrap;
+    padding: 0 var(--space-2);
+}
+
+.navbar__logout {
+    margin: var(--space-2);
+    color: var(--color-neutral-100);
+    background-color: var(--color-secondary-400);
+}
+
+.navbar__signup {
+    margin: var(--space-2);
+    color: var(--color-neutral-100);
+    background-color: var(--color-primary-400);
+}
+
+.navbar__login {
+    margin: var(--space-2);
+    color: var(--color-neutral-100);
+    background-color: var(--color-secondary-400);
 }
