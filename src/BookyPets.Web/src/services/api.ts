@@ -70,10 +70,14 @@ export const getReaderProgresses = async (): Promise<Progress[]> => {
     return progresses;
 }
 
-export const getBooks = async (search?: string): Promise<Book[]> => {
+export const getBooks = async (search?: string, limit?: number): Promise<Book[]> => {
     const url = new URL(`${BASE_URL}/books`);
     if (search?.trim()) {
-        url.searchParams.set("search", search.trim())
+        url.searchParams.set("search", search.trim());
+    }
+
+    if (limit !== undefined) {
+        url.searchParams.set("limit", String(limit));
     }
 
     const response = await fetch(url, {
