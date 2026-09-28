@@ -32,10 +32,22 @@ public static class RuleExtensions
             v => v > threshold,
             v => $"Value must be greater than {threshold}");
 
+    public static PropertyRule<T, int?> GreaterThan<T>(
+        this PropertyRule<T, int?> rule, int threshold)
+        => rule.AddRule(
+            v => v is null || v > threshold,
+            v => $"Value must be greater than {threshold}");
+
     public static PropertyRule<T, int> LessThan<T>(
         this PropertyRule<T, int> rule, int threshold)
         => rule.AddRule(
             v => v < threshold,
+            v => $"Value must be less than {threshold}");
+
+    public static PropertyRule<T, int?> LessThan<T>(
+        this PropertyRule<T, int?> rule, int threshold)
+        => rule.AddRule(
+            v => v is null || v < threshold,
             v => $"Value must be less than {threshold}");
 
     public static PropertyRule<T, TProperty> Must<T, TProperty>(
