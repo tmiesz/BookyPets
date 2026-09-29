@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+html, body, #root {
+    height: 100%;
+}
+
 body {
     background: var(--color-neutral-200);
     color: var(--color-neutral-900);
@@ -14,7 +18,7 @@ a {
     text-decoration: none;
 }
 
-button {
+.btn {
     display: inline-block;
     border: none;
     cursor: pointer;
@@ -26,7 +30,7 @@ button {
     color: var(--color-neutral-100);
 }
 
-button:hover {
+.btn:hover {
     transform: scale(1.03);
     box-shadow: var(--shadow-md);
 }
