@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Register.css"
 
 interface AuthFormData {
@@ -26,50 +26,50 @@ export default function Register() {
 
     return (
 
-        <div className="page">
-            <div className="container">
-                <div className="auth-container">
-                    <h1 className="page-title">Sign Up</h1>
-                    <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="register">
+            <div className="register__container">
+                <div className="register__content">
+                    <h1 className="register__title">Sign Up</h1>
+                    <form className="register__form" onSubmit={handleSubmit(onSubmit)}>
 
-                        {error && <div className="error-message">{error.detail}</div>}
+                        {error && <div className="register_error">{error.detail}</div>}
 
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="firstname">First Name
-                                <input className="form-input"
+                        <div className="register_group">
+                            <label className="register__label" htmlFor="firstname">First Name
+                                <input className="register__input"
                                     id="firstname"
                                     type="text"
                                     {...register('firstname', { required: "First name is required" })}
                                 />
                             </label>
-                            {errors.firstname && <span className="form-error">{errors.firstname.message}</span>}
+                            {errors.firstname && <span className="register__error">{errors.firstname.message}</span>}
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="lastname">Last Name
-                                <input className="form-input"
+                        <div className="register__group">
+                            <label className="register__label" htmlFor="lastname">Last Name
+                                <input className="register__input"
                                     id="lastname"
                                     type="text"
                                     {...register('lastname', { required: "Last name is required" })}
                                 />
                             </label>
-                            {errors.lastname && <span className="form-error">{errors.lastname.message}</span>}
+                            {errors.lastname && <span className="register__error">{errors.lastname.message}</span>}
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="email">Email
-                                <input className="form-input"
+                        <div className="register__group">
+                            <label className="register__label" htmlFor="email">Email
+                                <input className="register__input"
                                     id="email"
                                     type="email"
                                     {...register('email', { required: "Email is required" })}
                                 />
                             </label>
-                            {errors.email && <span className="form-error">{errors.email.message}</span>}
+                            {errors.email && <span className="register__error">{errors.email.message}</span>}
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="password">Password
-                                <input className="form-input"
+                        <div className="register__group">
+                            <label className="register__label" htmlFor="password">Password
+                                <input className="register__input"
                                     id="password"
                                     type="password"
                                     {...register('password', {
@@ -93,16 +93,16 @@ export default function Register() {
                                     })}
                                 />
                             </label>
-                            {errors.password && <span className="form-error">{errors.password.message}</span>}
+                            {errors.password && <span className="register__error">{errors.password.message}</span>}
                         </div>
 
-                        <button className="btn btn-primary btn-large" type="submit">
+                        <button className="btn register__button" type="submit">
                             Sign Up
                         </button>
                     </form>
 
-                    <div className="auth-switch">
-                        <p>Already have an account? <span className="auth-link"> Login</span></p>
+                    <div className="register__switch">
+                        <p>Already have an account? <Link className="btn register__link" to="/login"> Login</Link></p>
                     </div>
                 </div>
             </div>
