@@ -1,4 +1,3 @@
-import './styles/App.css'
 import Home from './pages/Home'
 import Books from './pages/Books'
 import Pets from './pages/Pets'
