@@ -59,7 +59,7 @@ export default function Login() {
                     </form>
 
                     <div className="login__switch">
-                        <p>Dont have an account? <Link className="btn login__link" to="/register">Sign up</Link></p>
+                        <p>Don't have an account? <Link className="btn login__link" to="/register">Sign up</Link></p>
                     </div>
                 </div>
             </div>
