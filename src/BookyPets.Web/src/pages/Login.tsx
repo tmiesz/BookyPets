@@ -23,43 +23,43 @@ export default function Login() {
 
     return (
 
-        <div className="page">
-            <div className="container">
-                <div className="auth-container">
-                    <h1 className="page-title">Login</h1>
-                    <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="login">
+            <div className="login__container">
+                <div className="login__content">
+                    <h1 className="login__title">Login</h1>
+                    <form className="login__form" onSubmit={handleSubmit(onSubmit)}>
 
-                        {error && <div className="error-message">{error.detail}</div>}
+                        {error && <div className="login__error">{error.detail}</div>}
 
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="email">Email
-                                <input className="form-input"
+                        <div className="login__group">
+                            <label className="login__label" htmlFor="email">Email
+                                <input className="login__input"
                                     id="email"
                                     type="email"
                                     {...register('email', { required: "Email is required" })}
                                 />
                             </label>
-                            {errors.email && <span className="form-error">{errors.email.message}</span>}
+                            {errors.email && <span className="login__error">{errors.email.message}</span>}
                         </div>
 
-                        <div className="form-group">
-                            <label className="form-label" htmlFor="password">Password
-                                <input className="form-input"
+                        <div className="login__group">
+                            <label className="login__label" htmlFor="password">Password
+                                <input className="login__input"
                                     id="password"
                                     type="password"
                                     {...register('password', { required: "Password is required" })}
                                 />
                             </label>
-                            {errors.password && <span className="form-error">{errors.password.message}</span>}
+                            {errors.password && <span className="login__error">{errors.password.message}</span>}
                         </div>
 
-                        <button className="btn btn-primary btn-large" type="submit">
+                        <button className="btn login__button" type="submit">
                             Login
                         </button>
                     </form>
 
-                    <div className="auth-switch">
-                        <p>Dont have an account?<span className="auth-link">Sign up</span></p>
+                    <div className="login__switch">
+                        <p>Dont have an account? <span className="btn login__link">Sign up</span></p>
                     </div>
                 </div>
             </div>
