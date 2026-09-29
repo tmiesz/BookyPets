@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Login.css"
 
 interface AuthFormData {
@@ -59,7 +59,7 @@ export default function Login() {
                     </form>
 
                     <div className="login__switch">
-                        <p>Dont have an account? <span className="btn login__link">Sign up</span></p>
+                        <p>Dont have an account? <Link className="btn login__link" to="/register">Sign up</Link></p>
                     </div>
                 </div>
             </div>
