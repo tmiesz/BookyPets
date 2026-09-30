@@ -32,3 +32,13 @@
 .book__cover img {
     width: 100px;
 }
+
+.book__acquire {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.book__acquire__button {
+    background-color: var(--color-primary-400);
+}

@@ -1,5 +1,5 @@
 import type { Book } from "../types/Book";
-import "../styles/AcquireCard.css"
+import "../styles/Book.css"
 import BookCard from "./BookCard";
 import { acquireBook } from "../services/api";
 import { useState } from "react";
@@ -23,11 +23,11 @@ export default function AcquireBookCard({ book }: BookCardProps) {
     };
 
     return (
-        <div className="acquire-card">
-            {error ? <p>{error.detail}</p> :
-                <button className="btn btn-secondary" onClick={handleAcquire}>Acquire Book</button>
-            }
+        <div className="acquire">
             <BookCard book={book} />
+            {error ? <p>{error.detail}</p> :
+                <button className="btn acquire__button" onClick={handleAcquire}>Acquire Book</button>
+            }
         </div>
     )
 }
