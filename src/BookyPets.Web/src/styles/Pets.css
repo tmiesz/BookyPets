@@ -1,15 +1,12 @@
 .pets {
-    padding: 2rem 0;
+    padding: var(--space-8) var(--space-6);
     width: 100%;
     box-sizing: border-box;
 }
 
 .pets__form {
     box-sizing: border-box;
-    background-color: var(--color-neutral-100);
-    padding: var(--space-4);
     margin: 0 auto var(--space-6);
-    border-radius: var(--radius-lg);
     width: 100%;
     max-width: 600px;
     display: flex;
@@ -19,26 +16,36 @@
 .pets__input {
     flex: 1;
     min-width: 0;
-    padding: var(--space-3);
-    border: none;
-    border-radius: var(--radius-sm);
-    background-color: var(--color-neutral-500);
-    color: var(--color-neutral-100);
+    padding: var(--space-3) var(--space-4);
+    border: var(--border-width-sm) solid var(--color-neutral-300);
+    border-radius: var(--radius-md);
+    background-color: var(--color-neutral-50);
+    color: var(--color-neutral-900);
+    font-family: var(--font-family-base);
     font-size: var(--text-base);
+    box-shadow: var(--shadow-sm);
 }
 
 .pets__input::placeholder {
-    color: var(--color-neutral-200);
+    color: var(--color-neutral-500);
 }
+
+.pets__input:focus {
+    outline: none;
+    border-color: var(--color-primary-400);
+    box-shadow: 0 0 0 var(--space-1) var(--color-primary-200);
+}
+
 .pets__search {
     background-color: var(--color-primary-400);
-    align-self: center;
-    min-width: 8rem;
+    align-self: stretch;
+    min-width: var(--space-32);
 }
 
 .pets__grid {
+    --pet-card-min-width: 180px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--pet-card-min-width), 1fr));
     gap: var(--space-6);
 }
 
@@ -49,4 +56,10 @@
 
 .pets__loading {
     color: var(--color-neutral-700);
+}
+
+.pets__empty {
+    color: var(--color-neutral-700);
+    text-align: center;
+    padding: var(--space-8) 0;
 }
