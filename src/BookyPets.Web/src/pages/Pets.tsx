@@ -3,11 +3,12 @@ import "../styles/Pets.css"
 import type { Pet } from "../types/Pet";
 import { getPets } from "../services/api";
 import AcquirePetCard from "../components/AcquirePetCard";
+import type { ApiError } from "../types/ApiError";
 
 export default function Pets() {
     const [searchQuery, setSearchQuery] = useState("");
     const [pets, setPets] = useState<Pet[]>([]);
-    const [error, setError] = useState<string | null>(null)
+    const [error, setError] = useState<ApiError | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -16,8 +17,7 @@ export default function Pets() {
                 const pets = await getPets()
                 setPets(pets)
             } catch (err) {
-                console.log(err)
-                setError("Failed to load pets...")
+                setError(err as ApiError)
             }
             finally {
                 setLoading(false)
@@ -30,18 +30,17 @@ export default function Pets() {
     const handleSearch = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (!searchQuery.trim()) return
         if (loading) return
+        const query = searchQuery.trim()
 
         setLoading(true);
 
         try {
-            const searchResult = await getPets(searchQuery)
-            setPets(searchResult)
+            const result = query ? await getPets(query) : await getPets()
+            setPets(result)
             setError(null)
         } catch (err) {
-            console.log(err)
-            setError("Failed to search pets...")
+            setError(err as ApiError)
         } finally {
             setLoading(false)
         }
@@ -61,14 +60,15 @@ export default function Pets() {
                 <button type="submit" className="btn pets__search">Search</button>
             </form>
 
-            {error && <div className="pets__error">{error}</div>}
+            {error && <div className="pets__error">{error.detail}</div>}
 
             {loading ? <div className="pets__loading">Loading...</div> :
-                <div className="pets__grid">
-                    {pets.map((pet) => (
-                        <AcquirePetCard pet={pet} key={pet.id} />
-                    ))}
-                </div>
+                pets.length === 0 ? (!error && <div className="pets__empty">No pets found.</div>) :
+                    <div className="pets__grid">
+                        {pets.map((pet) => (
+                            <AcquirePetCard pet={pet} key={pet.id} />
+                        ))}
+                    </div>
             }
         </div>
     );
