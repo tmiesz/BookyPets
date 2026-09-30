@@ -51,20 +51,20 @@ export default function Pets() {
 
     return (
         <div className="pets">
-            <form onSubmit={handleSearch} className="search-form">
+            <form onSubmit={handleSearch} className="pets__form">
                 <input
                     type="text"
                     placeholder="Search for pets..."
-                    className="search-input"
+                    className="pets__input"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)} />
-                <button type="submit" className="search-button">Search</button>
+                <button type="submit" className="btn pets__search">Search</button>
             </form>
 
-            {error && <div className="error-message">{error}</div>}
+            {error && <div className="pets__error">{error}</div>}
 
-            {loading ? <div className="loading">Loading...</div> :
-                <div className="pets-grid">
+            {loading ? <div className="pets__loading">Loading...</div> :
+                <div className="pets__grid">
                     {pets.map((pet) => (
                         <AcquirePetCard pet={pet} key={pet.id} />
                     ))}

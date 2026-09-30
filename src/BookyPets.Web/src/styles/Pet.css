@@ -32,3 +32,13 @@
 .pet__cover img {
     width: 100px;
 }
+
+.pet__acquire {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.pet__acquire__button {
+    background-color: var(--color-primary-400);
+}

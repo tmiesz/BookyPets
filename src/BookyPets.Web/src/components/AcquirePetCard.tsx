@@ -1,4 +1,4 @@
-import "../styles/AcquireCard.css"
+import "../styles/Pet.css"
 import { useState } from "react";
 import type { ApiError } from "../types/ApiError";
 import PetCard from "./PetCard";
@@ -23,11 +23,10 @@ export default function AcquirePetCard({ pet }: PetCardProps) {
     };
 
     return (
-        <div className="acquire-card">
-            {error ? <p>{error.detail}</p> :
-                <button className="btn btn-secondary" onClick={handleAcquire}>Acquire Pet</button>
-            }
+        <div className="pet__acquire">
             <PetCard pet={pet} />
+            <button className="btn pet__acquire__button" onClick={handleAcquire}>Acquire Pet</button>
+            <p className="acquire__error">{error?.detail}</p>
         </div>
     )
 }
