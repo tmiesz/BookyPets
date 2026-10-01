@@ -35,6 +35,14 @@ a {
     box-shadow: var(--shadow-md);
 }
 
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 :root {
   /* Colors — Primary */
   --color-primary-50: #f0f7fe;
