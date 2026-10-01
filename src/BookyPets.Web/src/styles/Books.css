@@ -43,9 +43,9 @@
 }
 
 .books__grid {
-    --pet-card-min-width: 180px;
+    --book-card-min-width: 280px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--pet-card-min-width), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--book-card-min-width), 1fr));
     gap: var(--space-6);
 }
 
