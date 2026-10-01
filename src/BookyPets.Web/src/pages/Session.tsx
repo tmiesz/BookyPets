@@ -204,72 +204,81 @@ export default function Session() {
     return (
         <div className="page">
             <div className="container">
-                <div className="session-container">
-                    <h1 className="page-title">Session</h1>
+                <div className="session">
+                    <h1 className="session__title">Session</h1>
 
-                    {error && <div className="error-message">{error.detail}</div>}
+                    {error && <div className="session__error">{error.detail}</div>}
 
                     {pendingSession && (
-                        <div className="session-resume-prompt">
-                            <p>
+                        <div className="session__resume">
+                            <p className="session__resume-text">
                                 {pendingSession.info.isStale
                                     ? `You have an old reading session${pendingSession.entry ? ` for "${pendingSession.entry.book.title}"` : ""}. Resume or discard it?`
                                     : `You have an active reading session${pendingSession.entry ? ` for "${pendingSession.entry.book.title}"` : ""}. Resume?`}
                             </p>
-                            <button onClick={handleResumePending} disabled={submitting}>Resume</button>
-                            <button onClick={handleDiscardPending} disabled={submitting}>Discard</button>
+                            <button className="btn session__resume-action" onClick={handleResumePending} disabled={submitting}>Resume</button>
+                            <button className="btn session__resume-action" onClick={handleDiscardPending} disabled={submitting}>Discard</button>
                         </div>
                     )}
 
-                    <div className="session-layout">
-                        {!isActive && (
-                            <>
-                                <div className="session-item">
-                                    <p>Choose a book</p>
-                                    <button onClick={() => setPicker("book")} disabled={!!pendingSession}>Choose</button>
-                                    {selectedEntry && <LibraryEntryCard entry={selectedEntry} />}
+                    {!isActive && (
+                        <div className="session__setup">
+                            <div className="session__slots">
+                                <section className="session__slot">
+                                    <h2 className="session__label">Book</h2>
+                                    {selectedEntry
+                                        ? <LibraryEntryCard entry={selectedEntry} />
+                                        : <div className="session__placeholder">No book selected</div>}
+                                    <button className="btn session__choose" onClick={() => setPicker("book")} disabled={!!pendingSession}>
+                                        {selectedEntry ? "Change book" : "Choose a book"}
+                                    </button>
                                     {picker === "book" && <LibraryEntryPicker onClose={() => setPicker(null)} onSelect={setSelectedEntry} />}
-                                </div>
+                                </section>
 
-                                <div className="session-item">
-                                    <button className="start-session-button" disabled={!selectedEntry || submitting || !!pendingSession} onClick={handleStart}>Start a session</button>
-                                </div>
-
-                                <div className="session-item">
-                                    <p>Choose a pet</p>
-                                    <button onClick={() => setPicker("pet")} disabled={!!pendingSession}>Choose</button>
-                                    {selectedPet && <PetCard pet={selectedPet} />}
+                                <section className="session__slot">
+                                    <h2 className="session__label">Pet</h2>
+                                    {selectedPet
+                                        ? <PetCard pet={selectedPet} />
+                                        : <div className="session__placeholder">No pet selected</div>}
+                                    <button className="btn session__choose" onClick={() => setPicker("pet")} disabled={!!pendingSession}>
+                                        {selectedPet ? "Change pet" : "Choose a pet"}
+                                    </button>
                                     {picker === "pet" && <PetPicker onClose={() => setPicker(null)} onSelect={setSelectedPet} />}
-                                </div>
-                            </>
-                        )}
+                                </section>
+                            </div>
 
-                        {isActive && (
-                            <div className="session-active-controls">
+                            <button className="btn session__start" disabled={!selectedEntry || submitting || !!pendingSession} onClick={handleStart}>
+                                Start a session
+                            </button>
+                        </div>
+                    )}
+
+                    {isActive && (
+                        <div className="session__active">
+                            <div className="session__cards">
                                 {selectedEntry && <LibraryEntryCard entry={selectedEntry} />}
                                 {selectedPet && <PetCard pet={selectedPet} />}
+                            </div>
 
-                                <span className="session-clock">{formatElapsed(elapsedSeconds)}</span>
+                            <span className="session__clock">{formatElapsed(elapsedSeconds)}</span>
 
-                                <div className="session-pages-input">
-                                    <label htmlFor="pagesRead">Pages read</label>
-                                    <input id="pagesRead" type="number" min={0} value={pagesReadInput} onChange={(e) => setPagesReadInput(e.target.value)} />
-                                </div>
+                            <div className="session__pages">
+                                <label className="session__pages-label" htmlFor="pagesRead">Pages read</label>
+                                <input className="session__pages-input" id="pagesRead" type="number" min={0} value={pagesReadInput} onChange={(e) => setPagesReadInput(e.target.value)} />
+                            </div>
 
-                                <button onClick={handleComplete} disabled={submitting || pagesReadInput === ""}>
+                            <div className="session__actions">
+                                <button className="btn session__finish" onClick={handleComplete} disabled={submitting || pagesReadInput === ""}>
                                     Finish session
                                 </button>
-
-                                <button onClick={handleAbandon} disabled={submitting}>
+                                <button className="btn session__abandon" onClick={handleAbandon} disabled={submitting}>
                                     Abandon session
                                 </button>
                             </div>
-                        )}
-                    </div>
-
+                        </div>
+                    )}
                 </div>
             </div>
-
         </div>
-    )
+    );
 }
