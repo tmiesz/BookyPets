@@ -50,21 +50,21 @@ export default function Books() {
 
     return (
         <div className="books">
-            <form onSubmit={handleSearch} className="books_form">
+            <form onSubmit={handleSearch} className="books__form">
                 <input
                     type="text"
                     placeholder="Search for books..."
-                    className="books_input"
+                    className="books__input"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)} />
-                <button type="submit" className="btn books_search">Search</button>
+                <button type="submit" className="btn books__search">Search</button>
             </form>
 
             {error && <div className="books__error">{error.detail}</div>}
 
             {loading ? <div className="books__loading">Loading...</div> :
                 books.length === 0 ? (!error && <div className="books__empty">No books found.</div>) :
-                    <div className="books-grid">
+                    <div className="books__grid">
                         {books.map((book) => (
                             <AcquireBookCard book={book} key={book.id} />
                         ))}

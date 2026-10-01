@@ -23,11 +23,10 @@ export default function AcquireBookCard({ book }: BookCardProps) {
     };
 
     return (
-        <div className="acquire">
+        <div className="book__acquire">
             <BookCard book={book} />
-            {error ? <p>{error.detail}</p> :
-                <button className="btn acquire__button" onClick={handleAcquire}>Acquire Book</button>
-            }
+            <button className="btn book__acquire__button" onClick={handleAcquire}>Acquire Book</button>
+            <p className="acquire__error">{error?.detail}</p>
         </div>
     )
 }
