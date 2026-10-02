@@ -236,7 +236,17 @@ export default function Session() {
                                 </section>
 
                                 <section className="session__slot">
-                                    <h2 className="session__label">Pet</h2>
+                                    <div className="session__slot-header">
+                                        <h2 className="session__label">Pet</h2>
+                                        {selectedPet && (
+                                            <button
+                                                className="btn session__remove"
+                                                onClick={() => setSelectedPet(null)}
+                                                disabled={!!pendingSession}>
+                                                Remove
+                                            </button>
+                                        )}
+                                    </div>
                                     {selectedPet
                                         ? <PetCard pet={selectedPet} />
                                         : <div className="session__placeholder">No pet selected</div>}
