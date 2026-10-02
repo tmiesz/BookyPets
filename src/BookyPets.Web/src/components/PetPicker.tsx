@@ -24,15 +24,19 @@ export default function PetPicker({ onClose, onSelect }: Props) {
     }
 
     return (
-        <div className="picker-overlay">
-            <div className="picker">
-                <button onClick={onClose}>Close</button>
-                <p>Pick a pet</p>
-                {error && <div className="error-message">{error.detail}</div>}
-                <div>
+        <div className="picker" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+            <div className="picker__dialog" role="dialog" aria-modal="true" aria-labelledby="pet-picker-title">
+                <div className="picker__header">
+                    <h2 className="picker__title" id="pet-picker-title">Pick a pet</h2>
+                    <button className="btn picker__close" onClick={onClose}>Close</button>
+                </div>
+
+                {error && <div className="picker__error">{error.detail}</div>}
+
+                <div className="picker__list">
                     {pets.map((p) => (
-                        <button key={p.id} className="picker-button" onClick={() => handleSelect(p)}>
-                            <PetCard key={p.id} pet={p} />
+                        <button key={p.id} className="picker__option" onClick={() => handleSelect(p)}>
+                            <PetCard pet={p} />
                         </button>
                     ))}
                 </div>

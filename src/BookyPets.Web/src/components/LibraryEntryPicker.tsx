@@ -24,14 +24,18 @@ export default function LibraryEntryPicker({ onClose, onSelect }: Props) {
     }
 
     return (
-        <div className="picker-overlay">
-            <div className="picker">
-                <button onClick={onClose}>Close</button>
-                <p>Pick a book</p>
-                {error && <div className="error-message">{error.detail}</div>}
-                <div>
+        <div className="picker" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+            <div className="picker__dialog" role="dialog" aria-modal="true" aria-labelledby="book-picker-title">
+                <div className="picker__header">
+                    <h2 className="picker__title" id="book-picker-title">Pick a book</h2>
+                    <button className="btn picker__close" onClick={onClose}>Close</button>
+                </div>
+
+                {error && <div className="picker__error">{error.detail}</div>}
+
+                <div className="picker__list">
                     {entries.map((entry) => (
-                        <button key={entry.book.id} className="picker-button" onClick={() => handleSelect(entry)}>
+                        <button key={entry.book.id} className="picker__option" onClick={() => handleSelect(entry)}>
                             <LibraryEntryCard entry={entry} />
                         </button>
                     ))}
