@@ -48,6 +48,7 @@
 }
 
 .session__slots {
+    --session-card-min-height: 240px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-6);
@@ -65,8 +66,37 @@
     box-shadow: var(--shadow-sm);
 }
 
+.session__slot > :nth-child(2) {
+    flex: 1;
+    box-sizing: border-box;
+    min-height: var(--session-card-min-height);
+}
+
+.session__slot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    min-height: var(--space-8);
+}
+
+.btn.session__remove {
+    padding: var(--space-1) var(--space-3);
+    background-color: var(--color-neutral-600);
+    font-size: var(--text-sm);
+}
+
+.session__remove:hover {
+    background-color: var(--color-danger-50);
+}
+
+.session__remove:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .session__label {
-    color: var(--color-neutral-700);
+    color: var(--color-neutral-800);
     font-size: var(--text-lg);
 }
 
