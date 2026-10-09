@@ -45,15 +45,7 @@ public class PetsController(IMediator _mediator) : ApiController
         var createPetResult = await _mediator.SendAsync(command);
 
         return createPetResult.Match(
-            pet => Ok(new PetResponse(
-                pet.Id,
-                pet.Name,
-                DtoConverter.ToDto(pet.Species),
-                IconResolver.Species.Resolve(species),
-                pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
-                pet.Level,
-                pet.Experience,
-                pet.ExperienceForNextLevel)),
+            pet => Ok(DtoConverter.ToDto(pet)),
             Problem
         );
     }
@@ -66,15 +58,7 @@ public class PetsController(IMediator _mediator) : ApiController
         var getPetResult = await _mediator.SendAsync(query);
 
         return getPetResult.Match(
-            pet => Ok(new PetResponse(
-                pet.Id,
-                pet.Name,
-                DtoConverter.ToDto(pet.Species),
-                IconResolver.Species.Resolve(pet.Species),
-                pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
-                pet.Level,
-                pet.Experience,
-                pet.ExperienceForNextLevel)),
+            pet => Ok(DtoConverter.ToDto(pet)),
             Problem
         );
     }
@@ -87,15 +71,7 @@ public class PetsController(IMediator _mediator) : ApiController
         var getPetsResult = await _mediator.SendAsync(query);
 
         return getPetsResult.Match(
-            pets => Ok(pets.Select(pet => new PetResponse(
-                pet.Id,
-                pet.Name,
-                DtoConverter.ToDto(pet.Species),
-                IconResolver.Species.Resolve(pet.Species),
-                pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
-                pet.Level,
-                pet.Experience,
-                pet.ExperienceForNextLevel))),
+            pets => Ok(pets.Select(pet => DtoConverter.ToDto(pet))),
             Problem
         );
     }
