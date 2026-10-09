@@ -18,4 +18,9 @@ public static class SessionErrors
         ErrorType.Conflict,
         "Session.AlreadyActive",
         "You already have an active session.");
+
+    public static readonly Error NotOwned = new(
+        ErrorType.Forbidden,
+        "Session.NotOwned",
+        "You do not have access to this session.");
 }
