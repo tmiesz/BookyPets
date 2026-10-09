@@ -17,6 +17,7 @@ public class Session : AggregateRoot
     private readonly DateTime _startTime;
     private DateTime _lastHeartbeatAt;
 
+    public Guid ReaderId => _readerId;
     public SessionStatus Status { get; private set; }
     public int PagesRead { get; private set; }
     public DateTime? EndTime { get; private set; }
