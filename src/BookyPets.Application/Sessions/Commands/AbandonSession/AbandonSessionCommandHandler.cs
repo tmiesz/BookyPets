@@ -6,18 +6,16 @@ using BookyPets.Shared.Result;
 
 namespace BookyPets.Application.Sessions.Commands.AbandonSession;
 
-public class AbandonSessionCommandHandler : IHandler<AbandonSessionCommand, Result<Session>>
+public class AbandonSessionCommandHandler(
+    ISessionsRepository sessionsRepository,
+    IUnitOfWork unitOfWork,
+    IDateTimeProvider dateTimeProvider,
+    ICurrentReaderProvider currentReaderProvider) : IHandler<AbandonSessionCommand, Result<Session>>
 {
-    private readonly ISessionsRepository _sessionsRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IDateTimeProvider _dateTimeProvider;
-
-    public AbandonSessionCommandHandler(ISessionsRepository sessionsRepository, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
-    {
-        _sessionsRepository = sessionsRepository;
-        _unitOfWork = unitOfWork;
-        _dateTimeProvider = dateTimeProvider;
-    }
+    private readonly ISessionsRepository _sessionsRepository = sessionsRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
+    private readonly ICurrentReaderProvider _currentReaderProvider = currentReaderProvider;
 
     public async Task<Result<Session>> HandleAsync(AbandonSessionCommand request, CancellationToken cancellationToken = default)
     {
@@ -25,6 +23,9 @@ public class AbandonSessionCommandHandler : IHandler<AbandonSessionCommand, Resu
 
         if(session is null)
             return new Error(ErrorType.NotFound, "SessionNotFound", "Session was not found");
+
+        if (session.ReaderId != _currentReaderProvider.GetCurrentReader().Id)
+            return SessionErrors.NotOwned;
 
         var abandonSessionResult = session.Abandon(_dateTimeProvider.UtcNow);
 
