@@ -23,7 +23,7 @@ public class ProgressTests
     }
 
     [Fact]
-    public void Status_WhenCurrentPageIsTotalPage_ShouldBeCompleted()
+    public void Status_WhenCurrentPageIsTotalPage_ShouldComplete()
     {
         var book = BookFactory.CreateBook();
 
@@ -34,5 +34,42 @@ public class ProgressTests
         Assert.True(result.IsSuccess);
         Assert.Equal(Constants.Book.PageCount, progress.CurrentPage);
         Assert.Equal(BookStatus.Completed, progress.Status);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenSamePage_ShouldSucceedWithoutChangingProgress()
+    {
+        var progress = ProgressFactory.CreateProgress();
+
+        var result = progress.AddPagesRead(0);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(0, progress.CurrentPage);
+        Assert.NotEqual(BookStatus.Completed, progress.Status);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenPastTotalPages_ShouldClampAndComplete()
+    {
+        var progress = ProgressFactory.CreateProgress();
+
+        var result = progress.AddPagesRead(Constants.Book.PageCount + 50);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(Constants.Book.PageCount, progress.CurrentPage);
+        Assert.Equal(BookStatus.Completed, progress.Status);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenGoingBackwards_ShouldFail()
+    {
+        var progress = ProgressFactory.CreateProgress();
+        progress.AddPagesRead(20);
+
+        var result = progress.AddPagesRead(10);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(ProgressErrors.CannotGoBackwards, result.Error);
+        Assert.Equal(20, progress.CurrentPage);
     }
 }
