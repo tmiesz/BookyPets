@@ -9,7 +9,6 @@ using BookyPets.Application.Readers.Queries.GetReaderLibrary;
 using BookyPets.Application.Readers.Queries.GetReaderPets;
 using BookyPets.Application.Readers.Queries.GetReaderProgresses;
 using BookyPets.Contracts.Books;
-using BookyPets.Contracts.Pets;
 using BookyPets.Contracts.Readers;
 using BookyPets.Shared.Mediator.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -70,15 +69,7 @@ public class ReadersController(IMediator _mediator) : ApiController
         var getPetsResult = await _mediator.SendAsync(query);
 
         return getPetsResult.Match(
-            pets => Ok(pets.Select(pet => new PetResponse(
-                pet.Id,
-                pet.Name,
-                DtoConverter.ToDto(pet.Species),
-                IconResolver.Species.Resolve(pet.Species),
-                pet.FavouriteGenre is not null ? DtoConverter.ToDto(pet.FavouriteGenre) : null,
-                pet.Level,
-                pet.Experience,
-                pet.ExperienceForNextLevel))),
+            pets => Ok(pets.Select(pet => DtoConverter.ToDto(pet))),
             Problem);
     }
 
