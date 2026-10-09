@@ -3,15 +3,10 @@ namespace BookyPets.Domain.BookAggregate;
 
 public static class ProgressErrors
 {
-    public static readonly Error TooManyPages = new(
-        ErrorType.Failure,
-        "Book.TooManyPages",
-        "The book doesn't have that many pages.");
-
     public static readonly Error InvalidPage = new(
         ErrorType.Failure,
         "Book.InvalidPage",
-        "Page number must be greater than zero.");
+        "Page number cannot be negative.");
 
     public static readonly Error CannotGoBackwards = new(
         ErrorType.Failure,
@@ -27,4 +22,9 @@ public static class ProgressErrors
         ErrorType.Failure,
         "Book.CannotManuallyComplete",
         "Books can only be completed by reading to the final page.");
+
+    public static readonly Error NotOwned = new(
+        ErrorType.Forbidden,
+        "Progress.NotOwned",
+        "You do not have access to this progress.");
 }
