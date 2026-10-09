@@ -6,18 +6,16 @@ using BookyPets.Shared.Result;
 
 namespace BookyPets.Application.Sessions.Commands.CompleteSession;
 
-public class CompleteSessionCommandHandler : IHandler<CompleteSessionCommand, Result<Session>>
+public class CompleteSessionCommandHandler(
+    ISessionsRepository sessionsRepository,
+    IUnitOfWork unitOfWork,
+    IDateTimeProvider dateTimeProvider,
+    ICurrentReaderProvider currentReaderProvider) : IHandler<CompleteSessionCommand, Result<Session>>
 {
-    private readonly ISessionsRepository _sessionsRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IDateTimeProvider _dateTimeProvider;
-
-    public CompleteSessionCommandHandler(ISessionsRepository sessionsRepository, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
-    {
-        _sessionsRepository = sessionsRepository;
-        _unitOfWork = unitOfWork;
-        _dateTimeProvider = dateTimeProvider;
-    }
+    private readonly ISessionsRepository _sessionsRepository = sessionsRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
+    private readonly ICurrentReaderProvider _currentReaderProvider = currentReaderProvider;
 
     public async Task<Result<Session>> HandleAsync(CompleteSessionCommand request, CancellationToken cancellationToken = default)
     {
@@ -25,6 +23,9 @@ public class CompleteSessionCommandHandler : IHandler<CompleteSessionCommand, Re
 
         if(session is null)
             return new Error(ErrorType.NotFound, "SessionNotFound", "Session was not found");
+
+        if (session.ReaderId != _currentReaderProvider.GetCurrentReader().Id)
+            return SessionErrors.NotOwned;
 
         var completeSessionResult = session.Complete(request.PagesRead, _dateTimeProvider.UtcNow);
 
