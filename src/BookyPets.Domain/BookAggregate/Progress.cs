@@ -6,7 +6,7 @@ namespace BookyPets.Domain.BookAggregate;
 
 public class Progress : AggregateRoot
 {
-    private readonly Guid _readerId;
+    public Guid ReaderId { get; }
     public Guid BookId { get; }
 
     public int CurrentPage { get; private set; }
@@ -21,7 +21,7 @@ public class Progress : AggregateRoot
 
     public Progress(Guid readerId, Book book, Guid? id = null) : base(id ?? Guid.NewGuid())
     {
-        _readerId = readerId;
+        ReaderId = readerId;
         BookId = book.Id;
         TotalPages = book.PageCount;
         Status = BookStatus.PlanToRead;
@@ -31,24 +31,27 @@ public class Progress : AggregateRoot
     {
         if (Status == BookStatus.Completed)
             return ProgressErrors.AlreadyCompleted;
-        if (page <= 0)
+        if (page < 0)
             return ProgressErrors.InvalidPage;
+        if (page < CurrentPage)
+            return ProgressErrors.CannotGoBackwards;
 
         if (page == CurrentPage)
             return Result.Success;
 
-        var pagesRead = page - CurrentPage;
-        CurrentPage = page;
+        var newPage = Math.Min(page, TotalPages);
+        var pagesRead = newPage - CurrentPage;
+        CurrentPage = newPage;
 
         if (CurrentPage == TotalPages)
         {
             Status = BookStatus.Completed;
-            _domainEvents.Add(new BookReadEvent(_readerId, BookId, pagesRead));
+            _domainEvents.Add(new BookReadEvent(ReaderId, BookId, pagesRead));
         }
         else
         {
             Status = BookStatus.Reading;
-            _domainEvents.Add(new PageReadEvent(_readerId, BookId, pagesRead));
+            _domainEvents.Add(new PageReadEvent(ReaderId, BookId, pagesRead));
         }
 
         return Result.Success;
