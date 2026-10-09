@@ -48,4 +48,9 @@ public static class ReaderErrors
         ErrorType.Failure,
         "Reader.SessionAlreadyActive",
         "A reading session is already in progress.");
+
+    public static readonly Error PetNotOwned = new(
+        ErrorType.Forbidden,
+        "Reader.PetNotOwned",
+        "You do not own this pet.");
 }
