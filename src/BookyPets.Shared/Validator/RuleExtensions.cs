@@ -18,19 +18,25 @@ public static class RuleExtensions
         this PropertyRule<T, string> rule, int min)
         => rule.AddRule(
             v => v is not null && v.Length >= min,
-            v => $"Value length must be greater than {min}");
+            v => $"Value length must be at least {min}");
 
     public static PropertyRule<T, string> MaxLength<T>(
         this PropertyRule<T, string> rule, int max)
         => rule.AddRule(
             v => v is not null && v.Length <= max,
-            v => $"Value length must be less than {max}");
+            v => $"Value length must be at most {max}");
 
     public static PropertyRule<T, int> GreaterThan<T>(
         this PropertyRule<T, int> rule, int threshold)
         => rule.AddRule(
             v => v > threshold,
             v => $"Value must be greater than {threshold}");
+
+    public static PropertyRule<T, int> GreaterThanOrEqualTo<T>(
+        this PropertyRule<T, int> rule, int threshold)
+        => rule.AddRule(
+            v => v >= threshold,
+            v => $"Value must be greater than or equal to {threshold}");
 
     public static PropertyRule<T, int?> GreaterThan<T>(
         this PropertyRule<T, int?> rule, int threshold)
