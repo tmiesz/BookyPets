@@ -11,9 +11,8 @@ public class SearchPetsQueryHandler(IPetsRepository petsRepository) : IHandler<S
 
     public async Task<Result<List<Pet>>> HandleAsync(SearchPetsQuery request, CancellationToken cancellationToken = default)
     {
-        var pets = await _petsRepository.SearchPetsAsync(request.Search);
+        var pets = await _petsRepository.SearchPetsAsync(request.Search, request.Limit, request.Offset);
 
         return pets;
     }
 }
-

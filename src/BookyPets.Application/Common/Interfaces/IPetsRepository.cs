@@ -7,6 +7,6 @@ public interface IPetsRepository
     Task AddPetAsync(Pet pet);
     Task<Pet?> GetPetAsync(Guid petId);
     Task<List<Pet>> GetPetsAsync(List<Guid> petId);
-    Task<List<Pet>> SearchPetsAsync(string? search = null);
+    Task<List<Pet>> SearchPetsAsync(string? search = null, int? limit = null, int? offset = null);
     Task UpdatePetAsync(Pet pet);
 }

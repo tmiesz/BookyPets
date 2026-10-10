@@ -27,7 +27,7 @@ public class PetsRepository(BookyPetsDbContext dbContext) : IPetsRepository
             .ToListAsync();
     }
 
-    public async Task<List<Pet>> SearchPetsAsync(string? search = null)
+    public async Task<List<Pet>> SearchPetsAsync(string? search = null, int? limit = null, int? offset = null)
     {
         var pets = _dbContext.Pets.AsQueryable();
 
@@ -44,7 +44,19 @@ public class PetsRepository(BookyPetsDbContext dbContext) : IPetsRepository
                 (pet.FavouriteGenre != null && matchingGenres.Contains(pet.FavouriteGenre)));
         }
 
-        return await pets.ToListAsync();
+        var orderedPets = pets
+            .OrderBy(p => p.Name)
+            .ThenBy(p => p.Id);
+
+        IQueryable<Pet> page = orderedPets;
+
+        if (offset.HasValue)
+            page = page.Skip(offset.Value);
+
+        if (limit.HasValue)
+            page = page.Take(limit.Value);
+
+        return await page.ToListAsync();
     }
 
     public Task UpdatePetAsync(Pet pet)
