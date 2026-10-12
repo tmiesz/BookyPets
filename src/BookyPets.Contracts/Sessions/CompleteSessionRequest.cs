@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace BookyPets.Contracts.Sessions;
 
-public record CompleteSessionRequest(Guid SessionId, int PagesRead);
+public record CompleteSessionRequest(Guid SessionId, [property: JsonRequired] int PagesRead);

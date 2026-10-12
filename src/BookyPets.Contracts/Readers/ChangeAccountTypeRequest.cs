@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace BookyPets.Contracts.Readers;
 
-public record ChangeAccountTypeRequest(AccountType AccountType);
+public record ChangeAccountTypeRequest([property: JsonRequired] AccountType AccountType);
