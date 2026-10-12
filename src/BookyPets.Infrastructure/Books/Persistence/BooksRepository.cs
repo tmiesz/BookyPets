@@ -44,14 +44,15 @@ public class BooksRepository(BookyPetsDbContext dbContext) : IBooksRepository
                     (book.Genre != null && matchingGenres.Contains(book.Genre)));
         }
 
+        var orderedBooks = books
+            .OrderBy(b => b.Title)
+            .ThenBy(b => b.Id);
+
         if (limit.HasValue)
         {
-            books = books
-                    .OrderBy(b => b.Title)
-                    .ThenBy(b => b.Id)
-                    .Take(limit.Value);
+            return await orderedBooks.Take(limit.Value).ToListAsync();
         }
 
-        return await books.ToListAsync();
+        return await orderedBooks.ToListAsync();
     }
 }
