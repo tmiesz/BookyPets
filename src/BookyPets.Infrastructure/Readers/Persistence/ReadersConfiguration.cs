@@ -15,6 +15,7 @@ public class ReadersConfiguration : IEntityTypeConfiguration<Reader>
         builder.Property(r => r.FirstName).IsRequired();
         builder.Property(r => r.LastName).IsRequired();
         builder.Property(r => r.Email).IsRequired();
+        builder.HasIndex(r => r.Email).IsUnique();
 
         builder.Property<string>("_passwordHash")
             .HasColumnName("PasswordHash")
