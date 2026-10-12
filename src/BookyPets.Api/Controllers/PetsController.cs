@@ -1,11 +1,11 @@
 using BookyPets.Api.Common;
-using BookyPets.Application.Common.Authorization;
 using BookyPets.Application.Pets.Commands.CreatePet;
 using BookyPets.Application.Pets.Commands.GiveExperience;
 using BookyPets.Application.Pets.Queries.GetPet;
 using BookyPets.Application.Pets.Queries.SearchPets;
 using BookyPets.Contracts.Pets;
 using BookyPets.Shared.Mediator.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DomainGenre = BookyPets.Domain.BookAggregate.Genre;
 using DomainSpecies = BookyPets.Domain.PetAggregate.Species;
@@ -45,7 +45,7 @@ public class PetsController(IMediator _mediator) : ApiController
         var createPetResult = await _mediator.SendAsync(command);
 
         return createPetResult.Match(
-            pet => Ok(DtoConverter.ToDto(pet)),
+            pet => CreatedAtAction(nameof(GetPet), new { petId = pet.Id }, DtoConverter.ToDto(pet)),
             Problem
         );
     }
@@ -64,9 +64,9 @@ public class PetsController(IMediator _mediator) : ApiController
     }
 
     [HttpGet("")]
-    public async Task<IActionResult> SearchPets([FromQuery] string? search)
+    public async Task<IActionResult> SearchPets([FromQuery] string? search, [FromQuery] int? limit, [FromQuery] int? offset)
     {
-        var query = new SearchPetsQuery(search);
+        var query = new SearchPetsQuery(search, limit, offset);
 
         var getPetsResult = await _mediator.SendAsync(query);
 

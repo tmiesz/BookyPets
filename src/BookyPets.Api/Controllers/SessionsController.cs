@@ -1,5 +1,4 @@
 using BookyPets.Api.Common;
-using BookyPets.Application.Common.Authorization;
 using BookyPets.Application.Sessions.Commands.AbandonSession;
 using BookyPets.Application.Sessions.Commands.CompleteSession;
 using BookyPets.Application.Sessions.Commands.HeartbeatSession;
@@ -7,6 +6,7 @@ using BookyPets.Application.Sessions.Commands.StartSession;
 using BookyPets.Application.Sessions.Queries.GetActiveSession;
 using BookyPets.Contracts.Sessions;
 using BookyPets.Shared.Mediator.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookyPets.Api.Controllers;

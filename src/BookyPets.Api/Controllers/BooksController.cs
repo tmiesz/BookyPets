@@ -27,13 +27,16 @@ public class BooksController(IMediator _mediator) : ApiController
         var createBookResult = await _mediator.SendAsync(command);
 
         return createBookResult.Match(
-            book => Ok(new BookResponse(
-                book.Id,
-                book.Title,
-                book.Author,
-                DtoConverter.ToDto(book.Genre),
-                IconResolver.Genre.Resolve(book.Genre),
-                book.PageCount)),
+            book => CreatedAtAction(
+                nameof(GetBook),
+                new { bookId = book.Id },
+                new BookResponse(
+                    book.Id,
+                    book.Title,
+                    book.Author,
+                    DtoConverter.ToDto(book.Genre),
+                    IconResolver.Genre.Resolve(book.Genre),
+                    book.PageCount)),
             Problem
         );
     }
