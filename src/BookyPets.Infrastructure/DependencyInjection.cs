@@ -21,18 +21,23 @@ namespace BookyPets.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        bool isDevelopment)
     {
         return services
-            .AddAuthentication(configuration)
-            .AddPersistence();
+            .AddAuthentication(configuration, isDevelopment)
+            .AddPersistence(configuration);
 
     }
 
-    private static IServiceCollection AddPersistence(this IServiceCollection services)
+    private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
+        var connectionString = configuration.GetConnectionString("BookyPets") ?? "Data Source=BookyPets.db";
+
         services.AddDbContext<BookyPetsDbContext>(options =>
-            options.UseSqlite("Data source = BookyPets.db"));
+            options.UseSqlite(connectionString));
 
         services.AddScoped<IReadersRepository, ReadersRepository>();
         services.AddScoped<IPetsRepository, PetsRepository>();
@@ -47,12 +52,19 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAuthentication(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        bool isDevelopment)
     {
         var jwtSettings = new JwtSettings();
         configuration.Bind(JwtSettings.Section, jwtSettings);
 
-        services.AddSingleton(Options.Create(jwtSettings));
+        services.AddSingleton<IValidateOptions<JwtSettings>>(new JwtSettingsValidator(isDevelopment));
+        services.AddOptions<JwtSettings>()
+            .Bind(configuration.GetSection(JwtSettings.Section))
+            .ValidateOnStart();
+
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
@@ -63,6 +75,7 @@ public static class DependencyInjection
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.FromMinutes(1),
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(
