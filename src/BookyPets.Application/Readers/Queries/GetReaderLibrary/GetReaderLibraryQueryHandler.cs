@@ -31,11 +31,18 @@ public class GetReaderLibraryQueryHandler(
         var books = await _booksRepository.GetBooksAsync(bookIds);
         var booksById = books.ToDictionary(b => b.Id);
 
-        var entries = progresses
+        IEnumerable<ReaderLibraryEntry> entries = progresses
             .Where(p => booksById.ContainsKey(p.BookId))
             .Select(p => new ReaderLibraryEntry(booksById[p.BookId], p))
-            .ToList();
+            .OrderBy(e => e.Book.Title)
+            .ThenBy(e => e.Progress.Id);
 
-        return entries;
+        if (request.Offset.HasValue)
+            entries = entries.Skip(request.Offset.Value);
+
+        if (request.Limit.HasValue)
+            entries = entries.Take(request.Limit.Value);
+
+        return entries.ToList();
     }
 }

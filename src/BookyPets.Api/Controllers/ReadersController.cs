@@ -81,7 +81,7 @@ public class ReadersController(IMediator _mediator) : ApiController
         var acquireBookResult = await _mediator.SendAsync(command);
 
         return acquireBookResult.Match(
-            _ => NoContent(),
+            progressId => Ok(new AcquireBookResponse(progressId)),
             Problem);
     }
 
@@ -133,9 +133,9 @@ public class ReadersController(IMediator _mediator) : ApiController
     }
 
     [HttpGet("library")]
-    public async Task<IActionResult> GetLibrary()
+    public async Task<IActionResult> GetLibrary([FromQuery] int? limit, [FromQuery] int? offset)
     {
-        var query = new GetReaderLibraryQuery();
+        var query = new GetReaderLibraryQuery(limit, offset);
 
         var getLibraryResult = await _mediator.SendAsync(query);
 
