@@ -29,7 +29,7 @@ public class CreatePetTests : PetSpecies
             Constants.Pet.FavouriteContractsGenre);
 
         var response = await _client.PostAsJsonAsync("Pets", createPetRequest);
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
         var petResponse = await response.Content.ReadFromJsonAsync<PetResponse>();
         Assert.NotNull(petResponse);

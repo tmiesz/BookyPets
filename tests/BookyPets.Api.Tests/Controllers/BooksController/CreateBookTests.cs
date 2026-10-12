@@ -31,7 +31,7 @@ public class CreateBookTests : BookGenres
             Constants.Book.PageCount);
 
         var response = await _client.PostAsJsonAsync("Books", createBookRequest);
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
         var bookResponse = await response.Content.ReadFromJsonAsync<BookResponse>();
         Assert.NotNull(bookResponse);
