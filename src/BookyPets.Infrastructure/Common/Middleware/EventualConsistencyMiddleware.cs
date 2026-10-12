@@ -21,6 +21,11 @@ public class EventualConsistencyMiddleware(RequestDelegate next, ILogger<Eventua
         {
             try
             {
+                if (context.Response.StatusCode >= StatusCodes.Status400BadRequest)
+                {
+                    return;
+                }
+
                 if (context.Items.TryGetValue("DomainEventsQueue", out var value) &&
                     value is Queue<IDomainEvent> domainEventsQueue)
                 {
