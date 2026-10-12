@@ -1,6 +1,7 @@
 using BookyPets.Application.Authentication.Common;
 using BookyPets.Application.Common.Interfaces;
 using BookyPets.Domain.Common.Interfaces;
+using BookyPets.Domain.ReaderAggregate;
 using BookyPets.Shared.Mediator.Abstractions;
 using BookyPets.Shared.Result;
 
@@ -13,7 +14,7 @@ public class LoginQueryHandler(
 {
     public async Task<Result<AuthenticationResult>> HandleAsync(LoginQuery query, CancellationToken cancellationToken = default)
     {
-        var reader = await _readersRepository.GetByEmailAsync(query.Email);
+        var reader = await _readersRepository.GetByEmailAsync(Reader.NormalizeEmail(query.Email));
 
         return reader is null || !reader.IsCorrectPasswordHash(query.Password, _passwordHasher)
             ? AuthenticationErrors.InvalidCredentials

@@ -16,7 +16,9 @@ public class RegisterCommandHandler(
 {
     public async Task<Result<AuthenticationResult>> HandleAsync(RegisterCommand command, CancellationToken cancellationToken = default)
     {
-        if (await _readersRepository.ExistsByEmailAsync(command.Email))
+        var email = Reader.NormalizeEmail(command.Email);
+
+        if (await _readersRepository.ExistsByEmailAsync(email))
         {
             return new Error(ErrorType.Conflict, "User exists", "User with provided email already exists.");
         }
@@ -31,7 +33,7 @@ public class RegisterCommandHandler(
         var reader = new Reader(
             command.FirstName,
             command.LastName,
-            command.Email,
+            email,
             hashPasswordResult.Value);
 
         await _readersRepository.AddReaderAsync(reader);

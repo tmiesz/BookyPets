@@ -21,6 +21,8 @@ public class Reader : AggregateRoot
 
     public bool HasPet(Guid id) => _petIds.Contains(id);
 
+    public static string NormalizeEmail(string email) => email.Trim().ToLowerInvariant();
+
     private Reader()
     {
         FirstName = null!;
@@ -33,7 +35,7 @@ public class Reader : AggregateRoot
     {
         FirstName = firstName;
         LastName = lastName;
-        Email = email;
+        Email = NormalizeEmail(email);
         _passwordHash = passwordHash;
         AccountType = AccountType.Free;
     }
