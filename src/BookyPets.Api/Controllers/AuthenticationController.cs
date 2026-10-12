@@ -37,7 +37,7 @@ public class AuthenticationController(IMediator _mediator) : ApiController
 
         if (!authResult.IsSuccess)
         {
-            return Problem(detail: authResult.Error.Description, statusCode: StatusCodes.Status401Unauthorized);
+            return Problem(authResult.Error);
         }
 
         return authResult.Match(
