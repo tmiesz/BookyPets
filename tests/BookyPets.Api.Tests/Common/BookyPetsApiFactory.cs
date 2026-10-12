@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -19,6 +20,9 @@ public class BookyPetsApiFactory : WebApplicationFactory<IAssemblyMarker>, IAsyn
     {
         _testDatabase = SqliteTestDatabase.CreateAndInitialize();
 
+        builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(
+            new Dictionary<string, string?> { ["Database:MigrateAndSeedOnStartup"] = "false" }));
+
         builder.ConfigureTestServices(services =>
         {
             services
@@ -27,7 +31,7 @@ public class BookyPetsApiFactory : WebApplicationFactory<IAssemblyMarker>, IAsyn
                     options.UseSqlite(_testDatabase.Connection));
 
             services.AddAuthentication(TestAuthHandler.SchemeName)
-                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => {});
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { });
         });
     }
 
