@@ -15,12 +15,12 @@ public static class ReaderErrors
         "Maximum number of pets reached for this account type.");
 
     public static readonly Error PetAlreadyOwned = new(
-        ErrorType.Failure,
+        ErrorType.Conflict,
         "Reader.PetAlreadyOwned",
         "You already own this pet.");
 
     public static readonly Error BookAlreadyOwned = new(
-        ErrorType.Failure,
+        ErrorType.Conflict,
         "Reader.BookAlreadyOwned",
         "You already own this book.");
 
@@ -45,7 +45,7 @@ public static class ReaderErrors
         "Cannot downgrade account: you have more active quests than the new tier allows.");
 
     public static readonly Error SessionAlreadyActive = new(
-        ErrorType.Failure,
+        ErrorType.Conflict,
         "Reader.SessionAlreadyActive",
         "A reading session is already in progress.");
 
