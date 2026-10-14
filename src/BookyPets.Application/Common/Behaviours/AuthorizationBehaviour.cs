@@ -40,7 +40,7 @@ public class AuthorizationBehaviour<TRequest, TResponse>(ICurrentReaderProvider 
 
         if (requiredPermissions.Except(currentReader.Permissions).Any())
         {
-            return (dynamic)new Error(ErrorType.Unauthorized, "ReaderUnauthorized", "Reader is forbiddden from taking this action");
+            return (dynamic)new Error(ErrorType.Forbidden, "ReaderForbidden", "Reader is forbiddden from taking this action");
         }
 
         var requiredRoles = authorizationAttributes
