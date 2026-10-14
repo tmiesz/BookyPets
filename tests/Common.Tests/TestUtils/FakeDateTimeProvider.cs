@@ -1,6 +1,6 @@
 using BookyPets.Domain.Common.Interfaces;
 
-namespace BookyPets.Domain.Tests.TestUtils;
+namespace Common.Tests.TestUtils;
 
 public class FakeDateTimeProvider : IDateTimeProvider
 {
