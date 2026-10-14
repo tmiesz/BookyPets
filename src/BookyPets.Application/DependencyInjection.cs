@@ -14,8 +14,8 @@ public static class DependencyInjection
         services.AddMediator(Assembly.GetExecutingAssembly());
         services.AddValidators(Assembly.GetExecutingAssembly());
 
-        services.AddScoped(typeof(IPipelineBehaviour<,>), typeof(ValidationBehaviour<,>));
         services.AddScoped(typeof(IPipelineBehaviour<,>), typeof(AuthorizationBehaviour<,>));
+        services.AddScoped(typeof(IPipelineBehaviour<,>), typeof(ValidationBehaviour<,>));
 
         return services;
     }
