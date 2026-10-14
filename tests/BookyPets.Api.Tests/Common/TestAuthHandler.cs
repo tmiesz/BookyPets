@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using BookyPets.Domain.ReaderAggregate;
-using BookyPets.Domain.Tests.TestConstants;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -16,15 +14,21 @@ public class TestAuthHandler(
     : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
     public const string SchemeName = "Test";
+    public const string UserIdHeader = "X-Test-User";
+    public const string PermissionsHeader = "X-Test-Permissions";
+    public const string RolesHeader = "X-Test-Roles";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var claims = new List<Claim> { new("id", Constants.Reader.Id.ToString()) };
+        if (!Request.Headers.TryGetValue(UserIdHeader, out var userId) || string.IsNullOrWhiteSpace(userId))
+            return Task.FromResult(AuthenticateResult.NoResult());
 
-        foreach (var permission in Constants.Reader.Permissions)
+        var claims = new List<Claim> { new("id", userId.ToString()) };
+
+        foreach (var permission in ReadList(PermissionsHeader))
             claims.Add(new Claim("permissions", permission));
 
-        foreach (var role in Constants.Reader.Roles)
+        foreach (var role in ReadList(RolesHeader))
             claims.Add(new Claim("roles", role));
 
         var identity = new ClaimsIdentity(claims, SchemeName);
@@ -33,4 +37,9 @@ public class TestAuthHandler(
 
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }
+
+    private string[] ReadList(string headerName) =>
+        Request.Headers.TryGetValue(headerName, out var value)
+            ? value.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            : [];
 }
