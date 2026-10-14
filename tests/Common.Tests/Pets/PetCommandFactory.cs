@@ -2,7 +2,7 @@ using BookyPets.Application.Pets.Commands.CreatePet;
 using BookyPets.Application.Pets.Queries.GetPet;
 using BookyPets.Domain.BookAggregate;
 using BookyPets.Domain.PetAggregate;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace Common.Tests.Pets;
 

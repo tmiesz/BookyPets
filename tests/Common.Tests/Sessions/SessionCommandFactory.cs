@@ -1,6 +1,7 @@
+using BookyPets.Application.Sessions.Commands.AbandonSession;
 using BookyPets.Application.Sessions.Commands.CompleteSession;
 using BookyPets.Application.Sessions.Commands.StartSession;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace Common.Tests.Sessions;
 
@@ -22,5 +23,12 @@ public static class SessionCommandFactory
         return new CompleteSessionCommand(
             SessionId: sessionId,
             PagesRead: pagesRead ?? Constants.Session.PagesRead);
+    }
+
+    public static AbandonSessionCommand CreateAbandonSessionCommand(
+        Guid sessionId)
+    {
+        return new AbandonSessionCommand(
+            SessionId: sessionId);
     }
 }

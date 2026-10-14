@@ -1,7 +1,6 @@
 using BookyPets.Application.Books.Commands;
 using BookyPets.Domain.BookAggregate;
-using BookyPets.Domain.PetAggregate;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace Common.Tests.Books;
 

@@ -3,7 +3,7 @@ using BookyPets.Application.Authentication.Queries;
 using BookyPets.Application.Readers.Commands.AcquireBook;
 using BookyPets.Application.Readers.Commands.AcquirePet;
 using BookyPets.Application.Readers.Queries.GetProgress;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace Common.Tests.Readers;
 
@@ -48,10 +48,9 @@ public static class ReaderCommandFactory
     }
 
     public static GetProgressQuery CreateGetProgressQuery(
-    Guid? progressId = null)
+        Guid? progressId = null)
     {
         return new GetProgressQuery(
             ProgressId: progressId ?? Constants.Progress.Id);
-
     }
 }

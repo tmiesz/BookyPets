@@ -1,5 +1,5 @@
 using BookyPets.Domain.ReaderAggregate;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace Common.Tests.Readers;
 
