@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using BookyPets.Api.Tests.Common;
 using BookyPets.Api.Tests.Common.Books;
 using BookyPets.Contracts.Books;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace BookyPets.Api.Tests.Controllers.BooksController;
 

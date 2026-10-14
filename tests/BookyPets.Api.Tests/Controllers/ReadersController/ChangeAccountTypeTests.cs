@@ -3,16 +3,16 @@ using System.Net.Http.Json;
 using BookyPets.Api.Tests.Common;
 using BookyPets.Contracts.Authentication;
 using BookyPets.Contracts.Readers;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace BookyPets.Api.Tests.Controllers.ReadersController;
 
 [Collection(BookyPetsApiFactoryCollection.CollectionName)]
-public class ReadersTests
+public class ChangeAccountTypeTests
 {
     private readonly HttpClient _client;
 
-    public ReadersTests(BookyPetsApiFactory apiFactory)
+    public ChangeAccountTypeTests(BookyPetsApiFactory apiFactory)
     {
         _client = apiFactory.HttpClient;
         apiFactory.ResetDatabase();

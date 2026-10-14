@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using BookyPets.Api.Tests.Common;
 using BookyPets.Contracts.Authentication;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace BookyPets.Api.Tests.Controllers.AuthenticationController;
 
@@ -31,6 +31,18 @@ public class LoginTests
         var auth = await response.Content.ReadFromJsonAsync<AuthenticationResponse>();
         Assert.NotNull(auth);
         Assert.False(string.IsNullOrEmpty(auth.Token));
+    }
+
+    [Fact]
+    public async Task Login_WhenEmailHasDifferentCase_ShouldReturnToken()
+    {
+        await _client.PostAsJsonAsync("Authentication/register",
+            new RegisterRequest(Constants.Reader.FirstName, Constants.Reader.LastName, Constants.Reader.Email, Constants.Reader.Password));
+
+        var response = await _client.PostAsJsonAsync("Authentication/login",
+            new LoginRequest("BOB@Smith.com", Constants.Reader.Password));
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Fact]

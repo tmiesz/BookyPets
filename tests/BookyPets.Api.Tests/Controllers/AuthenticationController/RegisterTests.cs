@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using BookyPets.Api.Tests.Common;
 using BookyPets.Contracts.Authentication;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace BookyPets.Api.Tests.Controllers.AuthenticationController;
 
@@ -42,5 +42,26 @@ public class RegisterTests
             new RegisterRequest(Constants.Reader.FirstName, Constants.Reader.LastName, Constants.Reader.Email, Constants.Reader.Password));
 
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Register_WhenEmailDiffersOnlyByCase_ShouldReturnConflict()
+    {
+        await _client.PostAsJsonAsync("Authentication/register",
+            new RegisterRequest(Constants.Reader.FirstName, Constants.Reader.LastName, Constants.Reader.Email, Constants.Reader.Password));
+
+        var response = await _client.PostAsJsonAsync("Authentication/register",
+            new RegisterRequest(Constants.Reader.FirstName, Constants.Reader.LastName, "BOB@smith.com", Constants.Reader.Password));
+
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Register_WhenEmailIsInvalid_ShouldReturnBadRequestWithTheFailingProperty()
+    {
+        var response = await _client.PostAsJsonAsync("Authentication/register",
+            new RegisterRequest(Constants.Reader.FirstName, Constants.Reader.LastName, "not-an-email", Constants.Reader.Password));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

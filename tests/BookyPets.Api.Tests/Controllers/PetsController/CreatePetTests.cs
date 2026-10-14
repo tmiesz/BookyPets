@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using BookyPets.Api.Tests.Common;
 using BookyPets.Api.Tests.Common.Pets;
 using BookyPets.Contracts.Pets;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace BookyPets.Api.Tests.Controllers.PetsController;
 
@@ -36,5 +36,23 @@ public class CreatePetTests : PetSpecies
         Assert.Equal(Constants.Pet.Name, petResponse.Name);
         Assert.Equal(species, petResponse.Species);
         Assert.Equal(Constants.Pet.FavouriteContractsGenre, petResponse.FavouriteGenre);
+        Assert.Equal(1, petResponse.Level);
+        Assert.Equal(0, petResponse.Experience);
+    }
+
+    [Theory]
+    [InlineData("ab")]
+    [InlineData("abcdefghijklmnopqrstu")]
+    public async Task CreatePet_WhenNameLengthIsInvalid_ShouldReturnBadRequestWithTheFailingProperty(string name)
+    {
+        var createPetRequest = new CreatePetRequest(
+            name,
+            Constants.Pet.ContractSpecies,
+            Constants.Pet.FavouriteContractsGenre);
+
+        var response = await _client.PostAsJsonAsync("Pets", createPetRequest);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("Name", await response.ReadProblemCodeAsync());
     }
 }

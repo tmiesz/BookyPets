@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using BookyPets.Api.Tests.Common;
 using BookyPets.Contracts.Pets;
-using BookyPets.Domain.Tests.TestConstants;
+using Common.Tests.TestConstants;
 
 namespace BookyPets.Api.Tests.Controllers.PetsController;
 
@@ -37,5 +37,6 @@ public class GetPetTests
     {
         var response = await _client.GetAsync($"Pets/{Guid.NewGuid()}");
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("PetNotFound", await response.ReadProblemCodeAsync());
     }
 }
