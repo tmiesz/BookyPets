@@ -16,7 +16,10 @@ namespace BookyPets.Application.Tests.Common;
 public class MediatorFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLifetime
 {
     private SqliteTestDatabase _testDatabase = null!;
+    private readonly List<IServiceScope> _scopes = [];
+
     public FakeCurrentReaderProvider FakeCurrentReaderProvider { get; private set; } = null!;
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         _testDatabase = SqliteTestDatabase.CreateAndInitialize();
@@ -28,7 +31,7 @@ public class MediatorFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLif
         {
             services
                 .RemoveAll<DbContextOptions<BookyPetsDbContext>>()
-                .AddDbContext<BookyPetsDbContext>((sp,options) =>
+                .AddDbContext<BookyPetsDbContext>((sp, options) =>
                     options.UseSqlite(_testDatabase.Connection));
 
             FakeCurrentReaderProvider = new FakeCurrentReaderProvider();
@@ -40,16 +43,30 @@ public class MediatorFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLif
     public IMediator CreateMediator()
     {
         var serviceScope = Services.CreateScope();
+        _scopes.Add(serviceScope);
 
         _testDatabase.ResetDatabase();
+        FakeCurrentReaderProvider.Reset();
 
         return serviceScope.ServiceProvider.GetRequiredService<IMediator>();
+    }
+
+    public TestScenario CreateScenario()
+    {
+        var mediator = CreateMediator();
+
+        return new TestScenario(mediator, FakeCurrentReaderProvider);
     }
 
     public Task InitializeAsync() => Task.CompletedTask;
 
     Task IAsyncLifetime.DisposeAsync()
     {
+        foreach (var scope in _scopes)
+        {
+            scope.Dispose();
+        }
+
         _testDatabase.Dispose();
 
         return Task.CompletedTask;

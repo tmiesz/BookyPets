@@ -58,6 +58,27 @@ public class ValidationBehaviourTests
     }
 
     [Fact]
+    public async Task InvokeBehaviour_WhenSeveralFailures_ShouldReturnOnlyTheFirstOne()
+    {
+        var createBookRequest = BookCommandFactory.CreateCreateBookCommand();
+        List<ValidationFailure> validationFailures =
+        [
+            new(propertyName: "first", errorMessage: "first message"),
+            new(propertyName: "second", errorMessage: "second message")
+        ];
+
+        _mockValidator
+            .Validate(createBookRequest)
+            .Returns(new ValidationResult(validationFailures));
+
+        var result = await _validationBehaviour.HandleAsync(createBookRequest, _mockNextBehaviour, default);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal("first", result.Error.Code);
+        Assert.Equal("first message", result.Error.Description);
+    }
+
+    [Fact]
     public async Task InvokeBehaviour_WhenNoValidatorProvided_ShouldInvokeNextBehaviour()
     {
         var createBookRequest = BookCommandFactory.CreateCreateBookCommand();
