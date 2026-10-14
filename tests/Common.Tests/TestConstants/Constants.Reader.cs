@@ -1,6 +1,6 @@
 using BookyPets.Domain.ReaderAggregate;
 
-namespace BookyPets.Domain.Tests.TestConstants;
+namespace Common.Tests.TestConstants;
 
 public static partial class Constants
 {
@@ -11,6 +11,7 @@ public static partial class Constants
         public const string FirstName = "Bob";
         public const string LastName = "Smith";
         public const string Email = "bob@smith.com";
+        public const string OtherEmail = "alice@jones.com";
         public const string Password = "Admin123!@#A";
         public const string PasswordHash = "hash";
 

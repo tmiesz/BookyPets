@@ -3,7 +3,7 @@ using DomainGenre = BookyPets.Domain.BookAggregate.Genre;
 using ContractsSpecies = BookyPets.Contracts.Pets.Species;
 using DomainSpecies = BookyPets.Domain.PetAggregate.Species;
 
-namespace BookyPets.Domain.Tests.TestConstants;
+namespace Common.Tests.TestConstants;
 
 public static partial class Constants
 {

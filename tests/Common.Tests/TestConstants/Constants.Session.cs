@@ -1,4 +1,4 @@
-namespace BookyPets.Domain.Tests.TestConstants;
+namespace Common.Tests.TestConstants;
 
 public static partial class Constants
 {
