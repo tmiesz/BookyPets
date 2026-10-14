@@ -1,13 +1,14 @@
 ﻿using BookyPets.Domain.BookAggregate;
-using BookyPets.Domain.Tests.TestConstants;
+using BookyPets.Domain.BookAggregate.Events;
 using Common.Tests.Books;
+using Common.Tests.TestConstants;
 
 namespace BookyPets.Domain.Tests;
 
 public class ProgressTests
 {
     [Fact]
-    public void UpdateProgress_WhenExactPages_ShouldComplete()
+    public void AddPagesRead_WhenGivenAbsolutePage_ShouldSetCurrentPageToThatPageInsteadOfAddingToIt()
     {
         var progress = ProgressFactory.CreateProgress();
 
@@ -20,10 +21,23 @@ public class ProgressTests
 
         Assert.True(result2.IsSuccess);
         Assert.Equal(30, progress.CurrentPage);
+        Assert.Equal(BookStatus.Reading, progress.Status);
     }
 
     [Fact]
-    public void Status_WhenCurrentPageIsTotalPage_ShouldComplete()
+    public void AddPagesRead_WhenFirstPagesAreRead_ShouldChangeStatusFromPlanToReadToReading()
+    {
+        var progress = ProgressFactory.CreateProgress();
+
+        Assert.Equal(BookStatus.PlanToRead, progress.Status);
+
+        progress.AddPagesRead(1);
+
+        Assert.Equal(BookStatus.Reading, progress.Status);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenReachingTotalPages_ShouldComplete()
     {
         var book = BookFactory.CreateBook();
 
@@ -37,7 +51,7 @@ public class ProgressTests
     }
 
     [Fact]
-    public void AddPagesRead_WhenSamePage_ShouldSucceedWithoutChangingProgress()
+    public void AddPagesRead_WhenSamePage_ShouldSucceedWithoutChangingProgressOrRaisingEvents()
     {
         var progress = ProgressFactory.CreateProgress();
 
@@ -46,6 +60,7 @@ public class ProgressTests
         Assert.True(result.IsSuccess);
         Assert.Equal(0, progress.CurrentPage);
         Assert.NotEqual(BookStatus.Completed, progress.Status);
+        Assert.Empty(progress.PopDomainEvents());
     }
 
     [Fact]
@@ -71,5 +86,115 @@ public class ProgressTests
         Assert.False(result.IsSuccess);
         Assert.Equal(ProgressErrors.CannotGoBackwards, result.Error);
         Assert.Equal(20, progress.CurrentPage);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenPageIsNegative_ShouldFail()
+    {
+        var progress = ProgressFactory.CreateProgress();
+
+        var result = progress.AddPagesRead(-1);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(ProgressErrors.InvalidPage, result.Error);
+        Assert.Equal(0, progress.CurrentPage);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenAlreadyCompleted_ShouldFailAndKeepCurrentPage()
+    {
+        var progress = ProgressFactory.CreateProgress();
+        progress.AddPagesRead(Constants.Book.PageCount);
+
+        var result = progress.AddPagesRead(Constants.Book.PageCount);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(ProgressErrors.AlreadyCompleted, result.Error);
+        Assert.Equal(Constants.Book.PageCount, progress.CurrentPage);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenReadingInSteps_ShouldRaisePageReadEventsWithTheNumberOfNewPages()
+    {
+        var progress = ProgressFactory.CreateProgress();
+
+        progress.AddPagesRead(20);
+        progress.AddPagesRead(35);
+
+        var events = progress.PopDomainEvents();
+
+        Assert.Equal(2, events.Count);
+
+        var first = Assert.IsType<PageReadEvent>(events[0]);
+        Assert.Equal(progress.ReaderId, first.ReaderId);
+        Assert.Equal(progress.BookId, first.BookId);
+        Assert.Equal(20, first.PagesRead);
+
+        var second = Assert.IsType<PageReadEvent>(events[1]);
+        Assert.Equal(15, second.PagesRead);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenFinishingTheBook_ShouldRaiseBookReadEventWithTheRemainingPages()
+    {
+        var progress = ProgressFactory.CreateProgress();
+        progress.AddPagesRead(90);
+        progress.PopDomainEvents();
+
+        progress.AddPagesRead(Constants.Book.PageCount);
+
+        var events = progress.PopDomainEvents();
+
+        var bookRead = Assert.IsType<BookReadEvent>(Assert.Single(events));
+        Assert.Equal(progress.ReaderId, bookRead.ReaderId);
+        Assert.Equal(progress.BookId, bookRead.BookId);
+        Assert.Equal(10, bookRead.Pages);
+    }
+
+    [Fact]
+    public void AddPagesRead_WhenPastTotalPages_ShouldRaiseBookReadEventWithClampedPages()
+    {
+        var progress = ProgressFactory.CreateProgress();
+
+        progress.AddPagesRead(Constants.Book.PageCount + 50);
+
+        var bookRead = Assert.IsType<BookReadEvent>(Assert.Single(progress.PopDomainEvents()));
+        Assert.Equal(Constants.Book.PageCount, bookRead.Pages);
+    }
+
+    [Fact]
+    public void ChangeStatus_WhenNotCompleted_ShouldChangeStatus()
+    {
+        var progress = ProgressFactory.CreateProgress();
+
+        var result = progress.ChangeStatus(BookStatus.OnHold);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(BookStatus.OnHold, progress.Status);
+    }
+
+    [Fact]
+    public void ChangeStatus_WhenTryingToCompleteManually_ShouldFail()
+    {
+        var progress = ProgressFactory.CreateProgress();
+
+        var result = progress.ChangeStatus(BookStatus.Completed);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(ProgressErrors.CannotManuallyComplete, result.Error);
+        Assert.NotEqual(BookStatus.Completed, progress.Status);
+    }
+
+    [Fact]
+    public void ChangeStatus_WhenAlreadyCompleted_ShouldFail()
+    {
+        var progress = ProgressFactory.CreateProgress();
+        progress.AddPagesRead(Constants.Book.PageCount);
+
+        var result = progress.ChangeStatus(BookStatus.Reading);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(ProgressErrors.AlreadyCompleted, result.Error);
+        Assert.Equal(BookStatus.Completed, progress.Status);
     }
 }
