@@ -4,3 +4,11 @@ export interface User {
     lastname: string;
     email: string;
 }
+
+export interface AuthResponse {
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    token: string
+}

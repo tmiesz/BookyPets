@@ -1,6 +1,6 @@
 export interface Progress {
     id: string,
-    bookid: string,
+    bookId: string,
     currentPage: number,
     totalPages: number
 }
