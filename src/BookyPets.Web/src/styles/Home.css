@@ -28,3 +28,22 @@
 .container__item {
     margin: var(--space-2);
 }
+
+.home__cta {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+}
+
+.home__login {
+    background-color: var(--color-secondary-400);
+}
+
+.home__signup {
+    background-color: var(--color-primary-400);
+}
+
+.container__message {
+    color: var(--color-neutral-700);
+}

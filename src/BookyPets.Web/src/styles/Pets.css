@@ -17,11 +17,11 @@
     flex: 1;
     min-width: 0;
     padding: var(--space-3) var(--space-4);
-    border: var(--border-width-sm) solid var(--color-neutral-300);
+    border: 1px solid var(--color-neutral-300);
     border-radius: var(--radius-md);
     background-color: var(--color-neutral-50);
     color: var(--color-neutral-900);
-    font-family: var(--font-family-base);
+    font-family: inherit;
     font-size: var(--text-base);
     box-shadow: var(--shadow-sm);
 }
@@ -51,6 +51,11 @@
 
 .pets__error {
     color: var(--color-danger-600);
+    margin-bottom: var(--space-4);
+}
+
+.pets__summary {
+    color: var(--color-neutral-700);
     margin-bottom: var(--space-4);
 }
 
