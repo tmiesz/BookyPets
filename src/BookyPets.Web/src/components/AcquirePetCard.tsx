@@ -1,32 +1,30 @@
 import "../styles/Pet.css"
-import { useState } from "react";
-import type { ApiError } from "../types/ApiError";
 import PetCard from "./PetCard";
+import ErrorMessage from "./ErrorMessage";
 import type { Pet } from "../types/Pet";
-import { acquirePet } from "../services/api";
+import { useAcquirePet } from "../hooks/queries";
+import { toApiError } from "../types/ApiError";
 
-interface PetCardProps {
-    pet: Pet
+interface AcquirePetCardProps {
+    pet: Pet,
+    owned: boolean
 }
 
-export default function AcquirePetCard({ pet }: PetCardProps) {
-    const [error, setError] = useState<ApiError | null>(null);
-
-    const handleAcquire = async () => {
-        setError(null);
-
-        try {
-            await acquirePet(pet.id);
-        } catch (error) {
-            setError(error as ApiError);
-        }
-    };
+export default function AcquirePetCard({ pet, owned }: AcquirePetCardProps) {
+    const acquire = useAcquirePet();
+    const isOwned = owned || acquire.isSuccess;
 
     return (
         <div className="pet__acquire">
             <PetCard pet={pet} />
-            <button className="btn pet__acquire__button" onClick={handleAcquire}>Acquire Pet</button>
-            <p className="acquire__error">{error?.detail}</p>
+            <button
+                type="button"
+                className="btn pet__acquire__button"
+                onClick={() => acquire.mutate(pet.id)}
+                disabled={isOwned || acquire.isPending}>
+                {isOwned ? "In your collection" : acquire.isPending ? "Acquiring..." : "Acquire Pet"}
+            </button>
+            <ErrorMessage error={acquire.error ? toApiError(acquire.error) : null} />
         </div>
     )
 }
