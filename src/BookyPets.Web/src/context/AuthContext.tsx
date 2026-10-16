@@ -1,184 +1,59 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
-import type { User } from "../types/User";
-import { BASE_URL } from "../services/api.ts"
-import type { ApiError } from "../types/ApiError.ts";
-
-interface AuthContextType {
-    user: User | null;
-    token: string | null;
-    signUp: (firstName: string, lastName: string, email: string, password: string) => Promise<boolean>;
-    login: (email: string, password: string) => Promise<boolean>;
-    logout: () => void;
-    loading: boolean;
-    error: ApiError | null;
-}
-
-const AuthContext = createContext<AuthContextType | null>(null);
-
-interface AuthResponse {
-    id: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    token: string
-}
-
-function getValidToken(): string | null {
-    const token = localStorage.getItem("token");
-
-    if (!token) return null;
-
-    try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-
-        if (payload.exp * 1000 <= Date.now()) {
-            localStorage.removeItem("token");
-            return null;
-        }
-
-        return token;
-    }
-    catch {
-        localStorage.removeItem("token");
-        return null;
-    }
-}
-
-function getUserFromToken(token: string): User | null {
-    try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-
-        return {
-            id: payload.id,
-            firstname: payload.firstname,
-            lastname: payload.lastname,
-            email: payload.email
-        };
-    } catch {
-        return null;
-    }
-}
+import { useEffect, useState, type ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { loginUser, registerUser, setUnauthorizedHandler } from "../services/api";
+import { clearStoredAuth, getToken, loadStoredAuth, storeAuth } from "../services/authStorage";
+import type { AuthResponse, User } from "../types/User";
+import { AuthContext } from "./authContext";
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
-    const [token, setToken] = useState<string | null>(() => getValidToken())
-    const [user, setUser] = useState<User | null>(() => {
-        const t = getValidToken();
-        return t ? getUserFromToken(t) : null;
-    });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<ApiError | null>(null);
+    const queryClient = useQueryClient();
+    const [user, setUser] = useState<User | null>(() => loadStoredAuth()?.user ?? null);
+    const [sessionExpired, setSessionExpired] = useState(false);
 
+    useEffect(() => {
+        setUnauthorizedHandler(() => {
+            if (!getToken()) return;
 
-    async function signUp(firstname: string, lastname: string, email: string, password: string): Promise<boolean> {
-        setLoading(true);
-        setError(null);
+            clearStoredAuth();
+            setUser(null);
+            setSessionExpired(true);
+            queryClient.clear();
+        });
 
-        try {
-            const res = await fetch(`${BASE_URL}/authentication/register`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    FirstName: firstname,
-                    LastName: lastname,
-                    Email: email,
-                    Password: password
-                })
-            });
-
-            if (!res.ok) {
-                const data: ApiError = await res.json();
-                setError(data);
-                return false;
-            }
-            const data: AuthResponse = await res.json();
-            handleAuthSuccess(data);
-
-            return true;
-        } catch (err) {
-            setError({
-                type: "",
-                title: "Error",
-                status: 0,
-                detail: "Something went wrong",
-                traceId: ""
-            });
-
-            return false;
-        }
-        finally {
-            setLoading(false)
-        }
-    }
-
-    async function login(email: string, password: string): Promise<boolean> {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const res = await fetch(`${BASE_URL}/authentication/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    Email: email,
-                    Password: password
-                })
-            });
-
-            if (!res.ok) {
-                const data: ApiError = await res.json();
-                setError(data);
-                return false;
-            }
-            const data: AuthResponse = await res.json();
-            handleAuthSuccess(data);
-
-            return true;
-        } catch (err) {
-            setError({
-                type: "",
-                title: "Error",
-                status: 0,
-                detail: "Something went wrong",
-                traceId: ""
-            });
-
-            return false;
-        }
-        finally {
-            setLoading(false)
-        }
-    }
+        return () => setUnauthorizedHandler(null);
+    }, [queryClient]);
 
     function handleAuthSuccess(data: AuthResponse) {
-        setToken(data.token);
-        localStorage.setItem("token", data.token);
-        setUser({
+        const authenticatedUser: User = {
             id: data.id,
             firstname: data.firstName,
             lastname: data.lastName,
             email: data.email
-        })
+        };
+
+        queryClient.clear();
+        storeAuth(data.token, authenticatedUser);
+        setUser(authenticatedUser);
+        setSessionExpired(false);
+    }
+
+    async function signUp(firstName: string, lastName: string, email: string, password: string): Promise<void> {
+        handleAuthSuccess(await registerUser(firstName, lastName, email, password));
+    }
+
+    async function login(email: string, password: string): Promise<void> {
+        handleAuthSuccess(await loginUser(email, password));
     }
 
     function logout() {
-        setToken(null);
+        clearStoredAuth();
         setUser(null);
-        localStorage.removeItem("token");
+        queryClient.clear();
     }
 
     return (
-        <AuthContext.Provider value={{ user, token, signUp, login, logout, loading, error }}>
+        <AuthContext.Provider value={{ user, sessionExpired, signUp, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
-}
-
-export function useAuth() {
-    const authContext = useContext(AuthContext);
-
-    if (!authContext) {
-        throw new Error("useAuth must be used within AuthProvider");
-    }
-
-    return authContext;
 }
