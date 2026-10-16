@@ -18,7 +18,7 @@ export default function BookCard({ book }: BookCardProps) {
             </div>
 
             <div className="book__cover">
-                <img src={`${BASE_URL}${book.iconUrl}`} />
+                <img src={`${BASE_URL}${book.iconUrl}`} alt={`${book.genre} book cover`} loading="lazy" />
             </div>
 
         </div>

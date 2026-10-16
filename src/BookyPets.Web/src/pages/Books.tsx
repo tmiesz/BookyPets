@@ -1,74 +1,60 @@
-import { useState, useEffect, type SubmitEvent } from "react";
-import { getBooks } from "../services/api";
-import type { Book } from "../types/Book";
+import { useMemo, useState, type SubmitEvent } from "react";
 import "../styles/Books.css"
 import AcquireBookCard from "../components/AcquireBookCard";
-import type { ApiError } from "../types/ApiError";
+import ErrorMessage from "../components/ErrorMessage";
+import { useBooks, useLibrary } from "../hooks/queries";
+import { toApiError } from "../types/ApiError";
 
 export default function Books() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [books, setBooks] = useState<Book[]>([]);
-    const [error, setError] = useState<ApiError | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [searchInput, setSearchInput] = useState("");
+    const [query, setQuery] = useState("");
 
-    useEffect(() => {
-        const loadBooks = async () => {
-            try {
-                const books = await getBooks()
-                setBooks(books)
-            } catch (err) {
-                setError(err as ApiError)
-            }
-            finally {
-                setLoading(false)
-            }
-        }
+    const booksQuery = useBooks({ search: query });
+    const libraryQuery = useLibrary();
 
-        loadBooks()
-    }, [])
+    const books = booksQuery.data ?? [];
+    const ownedBookIds = useMemo(
+        () => new Set((libraryQuery.data ?? []).map((entry) => entry.book.id)),
+        [libraryQuery.data]);
 
-    const handleSearch = async (e: SubmitEvent<HTMLFormElement>) => {
+    const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        if (loading) return;
-        const query = searchQuery.trim()
-
-        setLoading(true);
-
-        try {
-            const result = query ? await getBooks(searchQuery) : await getBooks()
-            setBooks(result)
-            setError(null)
-        } catch (err) {
-            setError(err as ApiError)
-        } finally {
-            setLoading(false)
-        }
-
-        setSearchQuery("")
+        setQuery(searchInput.trim())
     };
+
+    const showResults = !booksQuery.isPlaceholderData;
 
     return (
         <div className="books">
-            <form onSubmit={handleSearch} className="books__form">
+            <form onSubmit={handleSearch} className="books__form" role="search">
                 <input
                     type="text"
                     placeholder="Search for books..."
+                    aria-label="Search for books"
                     className="books__input"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)} />
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)} />
                 <button type="submit" className="btn books__search">Search</button>
             </form>
 
-            {error && <div className="books__error">{error.detail}</div>}
+            <ErrorMessage error={booksQuery.error ? toApiError(booksQuery.error) : null} className="books__error" />
 
-            {loading ? <div className="books__loading">Loading...</div> :
-                books.length === 0 ? (!error && <div className="books__empty">No books found.</div>) :
-                    <div className="books__grid">
-                        {books.map((book) => (
-                            <AcquireBookCard book={book} key={book.id} />
-                        ))}
-                    </div>
+            {booksQuery.isPending ? <div className="books__loading" role="status">Loading...</div> :
+                books.length === 0 ? (!booksQuery.isError && showResults && (
+                    <div className="books__empty">{query ? `No books found for "${query}".` : "No books found."}</div>
+                )) :
+                    <>
+                        {query && showResults && (
+                            <p className="books__summary" role="status">
+                                {books.length} {books.length === 1 ? "result" : "results"} for "{query}"
+                            </p>
+                        )}
+                        <div className="books__grid">
+                            {books.map((book) => (
+                                <AcquireBookCard book={book} owned={ownedBookIds.has(book.id)} key={book.id} />
+                            ))}
+                        </div>
+                    </>
             }
         </div>
     );
