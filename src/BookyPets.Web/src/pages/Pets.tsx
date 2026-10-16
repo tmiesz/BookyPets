@@ -1,76 +1,61 @@
-import { useState, useEffect, type SubmitEvent } from "react";
+import { useMemo, useState, type SubmitEvent } from "react";
 import "../styles/Pets.css"
-import type { Pet } from "../types/Pet";
-import { getPets } from "../services/api";
 import AcquirePetCard from "../components/AcquirePetCard";
-import type { ApiError } from "../types/ApiError";
+import ErrorMessage from "../components/ErrorMessage";
+import { usePets, useReaderPets } from "../hooks/queries";
+import { toApiError } from "../types/ApiError";
 
 export default function Pets() {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [pets, setPets] = useState<Pet[]>([]);
-    const [error, setError] = useState<ApiError | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [searchInput, setSearchInput] = useState("");
+    const [query, setQuery] = useState("");
 
-    useEffect(() => {
-        const loadPets = async () => {
-            try {
-                const pets = await getPets()
-                setPets(pets)
-            } catch (err) {
-                setError(err as ApiError)
-            }
-            finally {
-                setLoading(false)
-            }
-        }
+    const petsQuery = usePets({ search: query });
+    const readerPetsQuery = useReaderPets();
 
-        loadPets()
-    }, [])
+    const pets = petsQuery.data ?? [];
+    const ownedPetIds = useMemo(
+        () => new Set((readerPetsQuery.data ?? []).map((pet) => pet.id)),
+        [readerPetsQuery.data]);
 
-    const handleSearch = async (e: SubmitEvent<HTMLFormElement>) => {
+    const handleSearch = (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
-
-        if (loading) return
-        const query = searchQuery.trim()
-
-        setLoading(true);
-
-        try {
-            const result = query ? await getPets(query) : await getPets()
-            setPets(result)
-            setError(null)
-        } catch (err) {
-            setError(err as ApiError)
-        } finally {
-            setLoading(false)
-        }
-
-        setSearchQuery("")
+        setQuery(searchInput.trim())
     };
+
+    const showResults = !petsQuery.isPlaceholderData;
 
     return (
         <div className="pets">
-            <form onSubmit={handleSearch} className="pets__form">
+            <form onSubmit={handleSearch} className="pets__form" role="search">
                 <input
                     type="text"
                     placeholder="Search for pets..."
+                    aria-label="Search for pets"
                     className="pets__input"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)} />
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)} />
                 <button type="submit" className="btn pets__search">Search</button>
             </form>
 
-            {error && <div className="pets__error">{error.detail}</div>}
+            <ErrorMessage error={petsQuery.error ? toApiError(petsQuery.error) : null} className="pets__error" />
 
-            {loading ? <div className="pets__loading">Loading...</div> :
-                pets.length === 0 ? (!error && <div className="pets__empty">No pets found.</div>) :
-                    <div className="pets__grid">
-                        {pets.map((pet) => (
-                            <AcquirePetCard pet={pet} key={pet.id} />
-                        ))}
-                    </div>
+            {petsQuery.isPending ? <div className="pets__loading" role="status">Loading...</div> :
+                pets.length === 0 ? (!petsQuery.isError && showResults && (
+                    <div className="pets__empty">{query ? `No pets found for "${query}".` : "No pets found."}</div>
+                )) :
+                    <>
+                        {query && showResults && (
+                            <p className="pets__summary" role="status">
+                                {pets.length} {pets.length === 1 ? "result" : "results"} for "{query}"
+                            </p>
+                        )}
+                        <div className="pets__grid">
+                            {pets.map((pet) => (
+                                <AcquirePetCard pet={pet} owned={ownedPetIds.has(pet.id)} key={pet.id} />
+                            ))}
+                        </div>
+                    </>
             }
         </div>
     );
 }
-
