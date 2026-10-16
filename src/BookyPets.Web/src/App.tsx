@@ -8,6 +8,8 @@ import Session from './pages/Session.tsx'
 import AuthProvider from './context/AuthContext.tsx'
 import Login from './pages/Login.tsx'
 import Register from './pages/Register.tsx'
+import RequireAuth from './components/RequireAuth.tsx'
+import GuestOnly from './components/GuestOnly.tsx'
 
 function App() {
     return (
@@ -16,15 +18,19 @@ function App() {
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/session" element={<Session />} />
-                    <Route path="/books" element={<Books />} />
-                    <Route path="/pets" element={<Pets />} />
+                    <Route element={<GuestOnly />}>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                    </Route>
+                    <Route element={<RequireAuth />}>
+                        <Route path="/session" element={<Session />} />
+                        <Route path="/books" element={<Books />} />
+                        <Route path="/pets" element={<Pets />} />
+                    </Route>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </div>
-        </AuthProvider >
+        </AuthProvider>
     );
 }
 
