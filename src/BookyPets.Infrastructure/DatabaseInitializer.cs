@@ -8,12 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BookyPets.Infrastructure;
 
-/// <summary>
-/// Development-only: applies migrations and seeds demo data so a fresh clone runs out of the box.
-/// </summary>
 public static class DatabaseInitializer
 {
-    // Well-known development credentials. Never use outside local development.
+    // Development credentials. Don't use outside local development.
     public const string AdminEmail = "admin@bookypets.local";
     public const string AdminPassword = "AdminDev123!Pass";
     public const string DemoReaderEmail = "reader@bookypets.local";
