@@ -1,65 +1,85 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
-import "../styles/Login.css"
+import { Link, useLocation } from "react-router-dom";
+import ErrorMessage from "../components/ErrorMessage";
+import { useAuth } from "../context/useAuth";
+import { toApiError, type ApiError } from "../types/ApiError";
+import "../styles/Auth.css"
 
-interface AuthFormData {
+interface LoginFormData {
     email: string,
     password: string
 }
 
 export default function Login() {
-    const { login, error } = useAuth();
+    const { login, sessionExpired } = useAuth();
+    const location = useLocation();
+    const [serverError, setServerError] = useState<ApiError | null>(null);
 
-    const navigate = useNavigate()
+    const { register, handleSubmit, formState: { errors, isSubmitting } }
+        = useForm<LoginFormData>();
 
-    const { register, handleSubmit, formState: { errors } }
-        = useForm<AuthFormData>();
+    async function onSubmit(data: LoginFormData) {
+        setServerError(null);
 
-    async function onSubmit(data: AuthFormData) {
-        const success = await login(data.email, data.password);
-        if (success) navigate("/")
+        try {
+            await login(data.email, data.password);
+        } catch (error) {
+            setServerError(toApiError(error));
+        }
     }
 
     return (
 
-        <div className="login">
-            <div className="login__container">
-                <div className="login__content">
-                    <h1 className="login__title">Login</h1>
-                    <form className="login__form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="auth">
+            <div className="auth__container">
+                <div className="auth__content">
+                    <h1 className="auth__title">Login</h1>
+                    <form className="auth__form" onSubmit={handleSubmit(onSubmit)}>
 
-                        {error && <div className="login__error">{error.detail}</div>}
+                        {sessionExpired && (
+                            <div role="status" className="auth__notice">
+                                Your session has expired. Please log in again.
+                            </div>
+                        )}
 
-                        <div className="login__group">
-                            <label className="login__label" htmlFor="email">Email
-                                <input className="login__input"
+                        <ErrorMessage error={serverError} className="auth__error" />
+
+                        <div className="auth__group">
+                            <label className="auth__label" htmlFor="email">Email
+                                <input className="auth__input"
                                     id="email"
                                     type="email"
+                                    autoComplete="email"
+                                    aria-invalid={errors.email ? "true" : "false"}
+                                    aria-describedby={errors.email ? "email-error" : undefined}
                                     {...register('email', { required: "Email is required" })}
                                 />
                             </label>
-                            {errors.email && <span className="login__error">{errors.email.message}</span>}
+                            {errors.email && <span id="email-error" role="alert" className="auth__error">{errors.email.message}</span>}
                         </div>
 
-                        <div className="login__group">
-                            <label className="login__label" htmlFor="password">Password
-                                <input className="login__input"
+                        <div className="auth__group">
+                            <label className="auth__label" htmlFor="password">Password
+                                <input className="auth__input"
                                     id="password"
                                     type="password"
+                                    autoComplete="current-password"
+                                    aria-invalid={errors.password ? "true" : "false"}
+                                    aria-describedby={errors.password ? "password-error" : undefined}
                                     {...register('password', { required: "Password is required" })}
                                 />
                             </label>
-                            {errors.password && <span className="login__error">{errors.password.message}</span>}
+                            {errors.password && <span id="password-error" role="alert" className="auth__error">{errors.password.message}</span>}
                         </div>
 
-                        <button className="btn login__button" type="submit">
-                            Login
+                        <button className="btn auth__button auth__button--secondary" type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? "Logging in..." : "Login"}
                         </button>
                     </form>
 
-                    <div className="login__switch">
-                        <p>Don't have an account? <Link className="btn login__link" to="/register">Sign up</Link></p>
+                    <div className="auth__switch">
+                        <p>Don't have an account? <Link className="btn auth__link auth__link--primary" to="/register" state={location.state}>Sign up</Link></p>
                     </div>
                 </div>
             </div>

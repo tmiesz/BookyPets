@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
-import "../styles/Register.css"
+import { Link, useLocation } from "react-router-dom";
+import ErrorMessage from "../components/ErrorMessage";
+import { useAuth } from "../context/useAuth";
+import { toApiError, type ApiError } from "../types/ApiError";
+import "../styles/Auth.css"
 
-interface AuthFormData {
+interface RegisterFormData {
     firstname: string,
     lastname: string,
     email: string,
@@ -11,98 +14,112 @@ interface AuthFormData {
 }
 
 export default function Register() {
-    const { signUp, error } = useAuth();
+    const { signUp } = useAuth();
+    const location = useLocation();
+    const [serverError, setServerError] = useState<ApiError | null>(null);
 
-    const navigate = useNavigate()
+    const { register, handleSubmit, formState: { errors, isSubmitting } }
+        = useForm<RegisterFormData>();
 
-    const { register, handleSubmit, formState: { errors } }
-        = useForm<AuthFormData>();
+    async function onSubmit(data: RegisterFormData) {
+        setServerError(null);
 
-    async function onSubmit(data: AuthFormData) {
-        const success = await signUp(data.firstname, data.lastname, data.email, data.password);
-
-        if (success) navigate("/")
+        try {
+            await signUp(data.firstname, data.lastname, data.email, data.password);
+        } catch (error) {
+            setServerError(toApiError(error));
+        }
     }
 
     return (
 
-        <div className="register">
-            <div className="register__container">
-                <div className="register__content">
-                    <h1 className="register__title">Sign Up</h1>
-                    <form className="register__form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="auth">
+            <div className="auth__container">
+                <div className="auth__content">
+                    <h1 className="auth__title">Sign Up</h1>
+                    <form className="auth__form" onSubmit={handleSubmit(onSubmit)}>
 
-                        {error && <div className="register_error">{error.detail}</div>}
+                        <ErrorMessage error={serverError} className="auth__error" />
 
-                        <div className="register_group">
-                            <label className="register__label" htmlFor="firstname">First Name
-                                <input className="register__input"
+                        <div className="auth__group">
+                            <label className="auth__label" htmlFor="firstname">First Name
+                                <input className="auth__input"
                                     id="firstname"
                                     type="text"
+                                    aria-invalid={errors.firstname ? "true" : "false"}
+                                    aria-describedby={errors.firstname ? "firstname-error" : undefined}
                                     {...register('firstname', { required: "First name is required" })}
                                 />
                             </label>
-                            {errors.firstname && <span className="register__error">{errors.firstname.message}</span>}
+                            {errors.firstname && <span id="firstname-error" role="alert" className="auth__error">{errors.firstname.message}</span>}
                         </div>
 
-                        <div className="register__group">
-                            <label className="register__label" htmlFor="lastname">Last Name
-                                <input className="register__input"
+                        <div className="auth__group">
+                            <label className="auth__label" htmlFor="lastname">Last Name
+                                <input className="auth__input"
                                     id="lastname"
                                     type="text"
+                                    aria-invalid={errors.lastname ? "true" : "false"}
+                                    aria-describedby={errors.lastname ? "lastname-error" : undefined}
                                     {...register('lastname', { required: "Last name is required" })}
                                 />
                             </label>
-                            {errors.lastname && <span className="register__error">{errors.lastname.message}</span>}
+                            {errors.lastname && <span id="lastname-error" role="alert" className="auth__error">{errors.lastname.message}</span>}
                         </div>
 
-                        <div className="register__group">
-                            <label className="register__label" htmlFor="email">Email
-                                <input className="register__input"
+                        <div className="auth__group">
+                            <label className="auth__label" htmlFor="email">Email
+                                <input className="auth__input"
                                     id="email"
                                     type="email"
+                                    autoComplete="email"
+                                    aria-invalid={errors.email ? "true" : "false"}
+                                    aria-describedby={errors.email ? "email-error" : undefined}
                                     {...register('email', { required: "Email is required" })}
                                 />
                             </label>
-                            {errors.email && <span className="register__error">{errors.email.message}</span>}
+                            {errors.email && <span id="email-error" role="alert" className="auth__error">{errors.email.message}</span>}
                         </div>
 
-                        <div className="register__group">
-                            <label className="register__label" htmlFor="password">Password
-                                <input className="register__input"
+                        <div className="auth__group">
+                            <label className="auth__label" htmlFor="password">Password
+                                <input className="auth__input"
                                     id="password"
                                     type="password"
+                                    autoComplete="new-password"
+                                    aria-invalid={errors.password ? "true" : "false"}
+                                    aria-describedby={errors.password ? "password-error" : undefined}
                                     {...register('password', {
                                         required: "Password is required",
                                         minLength: { value: 8, message: "Password must be at least 8 characters" },
-                                        maxLength: { value: 100, message: "Password must be less than 100 characters" },
+                                        maxLength: { value: 128, message: "Password must be at most 128 characters" },
                                         validate: {
                                             uppercase: value =>
                                                 (value.match(/[A-Z]/g) || []).length >= 2 ||
-                                                "Password must contain atleast 2 uppercase letters.",
+                                                "Password must contain at least 2 uppercase letters.",
                                             lowercase: value =>
                                                 (value.match(/[a-z]/g) || []).length >= 3 ||
-                                                "Password must contain atleast 3 lowercase letters.",
+                                                "Password must contain at least 3 lowercase letters.",
                                             numbers: value =>
                                                 (value.match(/[0-9]/g) || []).length >= 2 ||
-                                                "Password must contain atleast 2 numbers.",
+                                                "Password must contain at least 2 numbers.",
                                             special: value =>
                                                 /[!@#$&*]/.test(value) ||
-                                                "Password must contain atleast 2 uppercase letters."
+                                                "Password must contain at least 1 special character (! @ # $ & *)."
                                         }
                                     })}
                                 />
                             </label>
-                            {errors.password && <span className="register__error">{errors.password.message}</span>}
+                            {errors.password && <span id="password-error" role="alert" className="auth__error">{errors.password.message}</span>}
                         </div>
 
-                        <button className="btn register__button" type="submit">
-                            Sign Up
+                        <button className="btn auth__button auth__button--primary" type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? "Signing up..." : "Sign Up"}
                         </button>
                     </form>
 
-                    <div className="register__switch">
-                        <p>Already have an account? <Link className="btn register__link" to="/login"> Login</Link></p>
+                    <div className="auth__switch">
+                        <p>Already have an account? <Link className="btn auth__link auth__link--secondary" to="/login" state={location.state}>Login</Link></p>
                     </div>
                 </div>
             </div>

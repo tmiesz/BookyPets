@@ -1,11 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/NavBar.css"
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export default function NavBar() {
     const { user, logout } = useAuth();
+    const navigate = useNavigate();
 
-    return <nav className="navbar">
+    const handleLogout = () => {
+        logout();
+        navigate("/");
+    }
+
+    return <nav className="navbar" aria-label="Main">
         <div className="navbar__brand">
             <Link to="/">Booky Pets</Link>
         </div>
@@ -31,9 +37,9 @@ export default function NavBar() {
             (
                 <div className="navbar__user">
                     <span className="navbar__greeting">
-                        Hello, {user?.firstname} {user?.lastname}
+                        Hello, {user.firstname} {user.lastname}
                     </span>
-                    <button className="btn navbar__logout" onClick={logout}>Logout</button>
+                    <button type="button" className="btn navbar__logout" onClick={handleLogout}>Logout</button>
                 </div>
             )
         }
