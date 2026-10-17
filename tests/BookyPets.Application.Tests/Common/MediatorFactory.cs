@@ -25,7 +25,11 @@ public class MediatorFactory : WebApplicationFactory<IAssemblyMarker>, IAsyncLif
         _testDatabase = SqliteTestDatabase.CreateAndInitialize();
 
         builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(
-            new Dictionary<string, string?> { ["Database:MigrateAndSeedOnStartup"] = "false" }));
+            new Dictionary<string, string?>
+            {
+                ["Database:MigrateOnStartup"] = "false",
+                ["Database:SeedOnStartup"] = "false",
+            }));
 
         builder.ConfigureTestServices(services =>
         {

@@ -26,10 +26,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
-    if (app.Environment.IsDevelopment() &&
-        app.Configuration.GetValue<bool>("Database:MigrateAndSeedOnStartup"))
+    if (app.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
     {
-        await app.Services.InitializeDevelopmentDatabaseAsync();
+        await app.Services.MigrateDatabaseAsync();
+    }
+
+    if (app.Configuration.GetValue<bool>("Database:SeedOnStartup"))
+    {
+        await app.Services.SeedDatabaseAsync();
     }
 
     app.UseExceptionHandler();

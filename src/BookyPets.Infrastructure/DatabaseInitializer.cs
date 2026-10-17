@@ -16,14 +16,21 @@ public static class DatabaseInitializer
     public const string DemoReaderEmail = "reader@bookypets.local";
     public const string DemoReaderPassword = "DemoReader123!Pass";
 
-    public static async Task InitializeDevelopmentDatabaseAsync(this IServiceProvider services)
+    public static async Task MigrateDatabaseAsync(this IServiceProvider services)
+    {
+        using var scope = services.CreateScope();
+
+        var dbContext = scope.ServiceProvider.GetRequiredService<BookyPetsDbContext>();
+
+        await dbContext.Database.MigrateAsync();
+    }
+
+    public static async Task SeedDatabaseAsync(this IServiceProvider services)
     {
         using var scope = services.CreateScope();
 
         var dbContext = scope.ServiceProvider.GetRequiredService<BookyPetsDbContext>();
         var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-
-        await dbContext.Database.MigrateAsync();
 
         await SeedReadersAsync(dbContext, passwordHasher);
         await SeedBooksAsync(dbContext);

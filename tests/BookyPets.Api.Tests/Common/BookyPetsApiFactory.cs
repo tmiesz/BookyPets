@@ -26,7 +26,11 @@ public class BookyPetsApiFactory : WebApplicationFactory<IAssemblyMarker>, IAsyn
         _testDatabase = SqliteTestDatabase.CreateAndInitialize();
 
         builder.ConfigureAppConfiguration((_, config) => config.AddInMemoryCollection(
-            new Dictionary<string, string?> { ["Database:MigrateAndSeedOnStartup"] = "false" }));
+            new Dictionary<string, string?>
+            {
+                ["Database:MigrateOnStartup"] = "false",
+                ["Database:SeedOnStartup"] = "false",
+            }));
 
         builder.ConfigureTestServices(services =>
         {
