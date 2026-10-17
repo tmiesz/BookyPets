@@ -4,4 +4,4 @@ public interface IBaseRequest { }
 
 public interface IRequest : IBaseRequest { }
 
-public interface IRequest<in TResponse> : IBaseRequest { }
+public interface IRequest<TResponse> : IBaseRequest { }

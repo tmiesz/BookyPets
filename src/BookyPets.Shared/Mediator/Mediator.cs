@@ -1,23 +1,22 @@
+using System.Reflection;
+using System.Runtime.ExceptionServices;
 using BookyPets.Shared.Mediator.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookyPets.Shared.Mediator;
 
-public class Mediator : IMediator
+public class Mediator(IServiceProvider serviceProvider) : IMediator
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public Mediator(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public async Task PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
     {
         var handlers = _serviceProvider.GetServices<INotificationHandler<TNotification>>();
-        var tasks = handlers.Select(handler => handler.HandleAsync(notification, cancellationToken));
 
-        await Task.WhenAll(tasks);
+        foreach (var handler in handlers)
+        {
+            await handler.HandleAsync(notification, cancellationToken);
+        }
     }
 
     public Task PublishAsync(INotification notification, CancellationToken cancellationToken = default)
@@ -27,7 +26,7 @@ public class Mediator : IMediator
             .Single(m => m.Name == nameof(PublishAsync) && m.IsGenericMethod)
             .MakeGenericMethod(notification.GetType());
 
-        return (Task)method.Invoke(this, [notification, cancellationToken])!;
+        return Invoke<Task>(method, this, [notification, cancellationToken]);
     }
 
     public async Task SendAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
@@ -50,21 +49,34 @@ public class Mediator : IMediator
     {
         var requestType = request.GetType();
 
-        var handlerType = typeof(IHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
+        var handlerType = typeof(IHandler<,>).MakeGenericType(requestType, typeof(TResponse));
         var handler = _serviceProvider.GetRequiredService(handlerType);
-        var handlerMehtod = handlerType.GetMethod(nameof(IHandler<,>.HandleAsync))!;
+        var handlerMethod = handlerType.GetMethod(nameof(IHandler<,>.HandleAsync))!;
 
-        HandlerDelegate<TResponse> pipeline = () => (Task<TResponse>)handlerMehtod.Invoke(handler, [request, cancellationToken])!;
+        HandlerDelegate<TResponse> pipeline = () => Invoke<Task<TResponse>>(handlerMethod, handler, [request, cancellationToken]);
 
         var behaviourType = typeof(IPipelineBehaviour<,>).MakeGenericType(requestType, typeof(TResponse));
-        var behaviourMethod = behaviourType.GetMethod(nameof(IPipelineBehaviour<IRequest<TResponse>, TResponse>.HandleAsync))!;
+        var behaviourMethod = behaviourType.GetMethod(nameof(IPipelineBehaviour<,>.HandleAsync))!;
 
         foreach (var behaviour in _serviceProvider.GetServices(behaviourType).Reverse())
         {
             var next = pipeline;
-            pipeline = () => (Task<TResponse>)behaviourMethod.Invoke(behaviour, [request, next, cancellationToken])!;
+            pipeline = () => Invoke<Task<TResponse>>(behaviourMethod, behaviour, [request, next, cancellationToken]);
         }
 
         return await pipeline();
+    }
+
+    private static T Invoke<T>(MethodInfo method, object? target, object?[] arguments)
+    {
+        try
+        {
+            return (T)method.Invoke(target, arguments)!;
+        }
+        catch (TargetInvocationException exception) when (exception.InnerException is not null)
+        {
+            ExceptionDispatchInfo.Capture(exception.InnerException).Throw();
+            throw;
+        }
     }
 }
