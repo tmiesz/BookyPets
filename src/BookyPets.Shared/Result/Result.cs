@@ -6,7 +6,11 @@ public class Result : IResult
     public bool IsSuccess => _error is null;
     public Error Error => _error ?? throw new InvalidOperationException("Result is a success");
 
-    protected Result(Error error) { _error = error; }
+    protected Result(Error error)
+    {
+        ArgumentNullException.ThrowIfNull(error);
+        _error = error;
+    }
     protected Result() { }
 
     public static readonly Result Success = new();
