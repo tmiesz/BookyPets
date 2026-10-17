@@ -1,6 +1,6 @@
 @host = http://localhost:5293
-@sessionId =
 @token =
+@sessionId =
 
 POST {{host}}/sessions/abandon
 Content-Type: application/json

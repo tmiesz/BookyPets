@@ -1,0 +1,6 @@
+@host = http://localhost:5293
+@token =
+@progressId =
+
+GET {{host}}/readers/progress/{{progressId}}
+Authorization: Bearer {{token}}

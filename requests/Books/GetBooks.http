@@ -1,6 +1,7 @@
 @host = http://localhost:5293
-@token = 
-@search = 
+@token =
+@search =
+@limit = 5
 
-GET {{host}}/books/?search={{search}}
+GET {{host}}/books?search={{search}}&limit={{limit}}
 Authorization: Bearer {{token}}

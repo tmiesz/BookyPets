@@ -1,9 +1,12 @@
 @host = http://localhost:5293
-@readerId = 6C3D7FCB-085F-4445-9E50-5419A0169FBB
+@token =
+@readerId =
+# Free, Basic or Pro
 @accountType = Pro
 
 PATCH {{host}}/readers/{{readerId}}/account
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "accountType": "{{accountType}}"

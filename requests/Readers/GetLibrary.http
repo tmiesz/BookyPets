@@ -1,0 +1,7 @@
+@host = http://localhost:5293
+@token =
+@limit = 10
+@offset = 0
+
+GET {{host}}/readers/library?limit={{limit}}&offset={{offset}}
+Authorization: Bearer {{token}}

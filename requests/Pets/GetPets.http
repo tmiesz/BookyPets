@@ -1,6 +1,8 @@
 @host = http://localhost:5293
-@token = 
-@search = fantasy
+@token =
+@search =
+@limit = 10
+@offset = 0
 
-GET {{host}}/pets/?search={{search}}
+GET {{host}}/pets?search={{search}}&limit={{limit}}&offset={{offset}}
 Authorization: Bearer {{token}}
