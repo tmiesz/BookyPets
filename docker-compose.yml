@@ -1,0 +1,24 @@
+services:
+  api:
+    build: .
+    ports:
+      - "5293:5293"
+    environment:
+      JwtSettings__Secret: ${JWT_SECRET:-bookypets-compose-demo-secret-}
+      Cors__AllowedOrigins__0: http://localhost:8080
+      Database__SeedOnStartup: "true"
+    volumes:
+      - bookypets-data:/data
+
+  web:
+    build:
+      context: ./src/BookyPets.Web
+      args:
+        VITE_API_URL: http://localhost:5293
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  bookypets-data:

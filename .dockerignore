@@ -1,0 +1,12 @@
+**/bin
+**/obj
+**/node_modules
+**/dist
+.git
+.direnv
+*.db
+*.db-shm
+*.db-wal
+tests
+requests
+src/BookyPets.Web
