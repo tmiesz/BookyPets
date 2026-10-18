@@ -1,5 +1,5 @@
 {
-  description = "Git replica using dotnet";
+  description = "BookyPets development environment";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
