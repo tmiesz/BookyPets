@@ -4,7 +4,7 @@ services:
     ports:
       - "5293:5293"
     environment:
-      JwtSettings__Secret: ${JWT_SECRET:-bookypets-compose-demo-secret-}
+      JwtSettings__Secret: ${JWT_SECRET:-bookypets-compose-demo-secret-change-me}
       Cors__AllowedOrigins__0: http://localhost:5173
       Database__SeedOnStartup: "true"
     volumes:
