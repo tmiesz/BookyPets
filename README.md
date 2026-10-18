@@ -91,7 +91,7 @@ npm run dev
 
 Open http://localhost:5173. The API runs on http://localhost:5293. To point the frontend elsewhere, set `VITE_API_URL`.
 
-### Demo accounts (development only)
+### Demo accounts (seeded demo data)
 
 | Account | Email                    | Password             |
 | ------- | ------------------------ | -------------------- |
